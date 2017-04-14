@@ -1,4 +1,4 @@
-captureBatchX
+captureBatch1
 
 if ismac
     pathname = '/Users/crisniell/Dropbox/Prey capture/Prey_tracks/'
