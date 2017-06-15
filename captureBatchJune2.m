@@ -1,5 +1,5 @@
 ON=1; OFF=0;
-pathname ='C:\Users\lab\Desktop\Prey Capture\Excel Data For Code\';
+pathname ='C:\Users\lab\Desktop\Prey Capture\Excel Data For Code\June 5\';
 
 
 
@@ -33,7 +33,7 @@ n=0;
 n=n+1;
 files(n).subj = '7520';
 files(n).lighting = OFF;
-files(n).trackpts = 'DLTdv5_7520catchxypts.csv';%specific path and file name
+files(n).trackpts = 'june5_ballspainted_capturexypts.csv';%specific path and file name
 files(n).soundfile = '';
 files(n).headbar = 0;
 files(n).contrast = 100; %some vision thing
@@ -43,10 +43,10 @@ files(n).scale=18;%pixels/cm on video tracking
 files(n).group=1;
 files(n).sex=1; 
 files(n).FrameS=1;%frame where cricket is first available
-files(n).FrameEnd=5000;%frame where cricket is caught
-files(n).CapTime=11;%capture time in seconds
+files(n).FrameEnd=3212;%frame where cricket is caught
+files(n).CapTime=4.7;%capture time in seconds
 files(n).FrameFlash=''; %unused, left over from earlier AV sync method
-files(n).Moviefile='day2,7520 catch (online-video-cutter.com) (1).mp4';
+files(n).Moviefile='20170602112552.mp4';
 files(n).body=0; %unused
 files(n).bounds=box_Bounds(:,1);
 %%

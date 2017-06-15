@@ -1,4 +1,4 @@
-function [h_d targ body r thetaR thetaSac vhead vbody abody vtarg atarg head sub] = analyzeCapture(fname,fps,scale,sub)
+function [h_d targ r thetaR vhead vtarg atarg head sub] = analyzeCapture(fname,fps,scale,sub)
 if isempty(fname)
 [f p] = uigetfile('*.*','behav data');
 fname = fullfile(p,f);
@@ -9,17 +9,17 @@ catch
     data =dlmread(fname);
 end
 
- missing = isnan(mean(data(:,7),2));
+ missing = isnan(mean(data(:,1),2));
  data = data(~missing,:);
  data=data(4:end,:);%excludes boundry coordinates and column label
 
 figure
 
 % read in points
-body = data(:,5:6);
+%body = data(:,5:6);
 pt1 = data(:,3:4);%left ear coordinates
 pt2 = data(:,1:2);%right ear
-targ = data(:,7:8);
+targ = data(:,5:6);
 head = 0.5*(pt1+pt2);
 
 % final = min(find(isnan(targ(:,1))))-1;
@@ -31,7 +31,7 @@ head = 0.5*(pt1+pt2);
 % end
 
 % plot head and target trajectories
-subplot(2,3,1)
+subplot(2,2,1)
 plot(head(:,1),head(:,2));
 hold on
 plot(targ(:,1),targ(:,2),'g');
@@ -41,7 +41,7 @@ title (sub)
 % distance between head and target
 r = sqrt((head(:,1) - targ(:,1)).^2 + (head(:,2) - targ(:,2)).^2);
 r=r./scale;
-subplot(2,3,2)
+subplot(2,2,2)
 plot((1:length(r))/fps,r); ylabel('distance to target (cm)');
 xlim([1 length(r)]/fps); ylim([0 80]);hold on
 % plot((1:length(isTouch))/fps,isTouch*10,'r')
@@ -50,11 +50,11 @@ xlim([1 length(r)]/fps); ylim([0 80]);hold on
 
 
 %% mouse velocity
-vbody = diff(body); vbody = sqrt(vbody(:,1).^2 + vbody(:,2).^2);%distance/60hz
-abody= diff(vbody);
-vbody = conv(vbody,ones(1,12),'same'); %filters/smoothes the velocity data
-vscale=vbody/5 % to put on scale more comparable to acceleration
-abody = conv(abody,ones(1,12),'same');
+%vbody = diff(body); vbody = sqrt(vbody(:,1).^2 + vbody(:,2).^2);%distance/60hz
+%abody= diff(vbody);
+%vbody = conv(vbody,ones(1,12),'same'); %filters/smoothes the velocity data
+%vscale=vbody/5 % to put on scale more comparable to acceleration
+%abody = conv(abody,ones(1,12),'same');
 
 %  figure
 %  plot(vbody); ylabel('body speed');hold on
@@ -66,9 +66,9 @@ abody = conv(abody,ones(1,12),'same');
 vtarg = diff(targ); vtarg = sqrt(vtarg(:,1).^2 + vtarg(:,2).^2);
 atarg= diff(vtarg);
 vtarg = conv(vtarg,ones(1,12),'same'); %filters the velcity data
-vscaleT=vtarg/5
+vscaleT=vtarg/5;
 atarg= conv(atarg,ones(1,12),'same');
-ascale=atarg/2
+ascale=atarg/2;
 
 % figure
 %  plot(ascale,'r');hold on
@@ -92,10 +92,10 @@ headtheta = getSmoothAngle(headvec)-pi/2;%head angle relative to coordinate syst
 targvec = targ-head;
 targtheta = getSmoothAngle(targvec); %target angle relative to coordinate system
 
-neckvec = head-body;
-necktheta = getSmoothAngle(neckvec);
+%neckvec = head-body;
+%necktheta = getSmoothAngle(neckvec);
 
-saccadetheta=necktheta-headtheta;
+%saccadetheta=necktheta-headtheta;
 Rtheta=headtheta-targtheta;
 
 %% head angle and target position
@@ -107,13 +107,13 @@ Rtheta=headtheta-targtheta;
 thetaH=mod(headtheta*180/pi,360);
 thetaT=mod(targtheta*180/pi,360);
 thetaR=mod(Rtheta*180/pi,360);
-thetaSac= mod(saccadetheta*180/pi,360);
+%thetaSac= mod(saccadetheta*180/pi,360);
 
 %% head angle and change in distance
 thetaR_sym=mod(thetaR-180,360);
-thetaSac_sym=mod(thetaSac-180,360);
+%thetaSac_sym=mod(thetaSac-180,360);
 
-subplot(2,3,3);
+subplot(2,2,3);
 %figure
 binr=0:5:50;
 bint=0:10:360;
@@ -122,13 +122,20 @@ hrt= hrt/sum(hrt(:));
 imagesc(flipud(hrt));
 title 'ThetaTarget'
 
-subplot(2,3,4);
-binr=0:5:50;
-bint=0:10:360;
-hrt=hist2(r,thetaSac_sym,binr,bint);
-hrt= hrt/sum(hrt(:));
-imagesc(flipud(hrt));
-title 'head saccade/thetaBody'
+xt=get(gca, 'xtick'); %mw 06052017
+set(gca, 'xticklabel', binr(xt))
+xlabel('r')
+yt=get(gca, 'ytick'); %mw 06052017
+set(gca, 'yticklabel', bint(yt))
+ylabel('theta')
+
+% subplot(2,3,4);
+% binr=0:5:50;
+% bint=0:10:360;
+% hrt=hist2(r,thetaSac_sym,binr,bint);
+% hrt= hrt/sum(hrt(:));
+% imagesc(flipud(hrt));
+%title 'head saccade/thetaBody'
 
 %% calculate correlation between head angle and target location
 % opt = 'unbiased';
@@ -194,7 +201,7 @@ if max(r)>=6
 r_dis=r(r>=6 & r<50);
 Rtheta_dis=Rtheta(r>=6 & r<50);
 x_d = r_dis.*cos(Rtheta_dis); y_d = r_dis.*sin(Rtheta_dis);
-subplot(2,3,6)
+subplot(2,2,4)
 plot(y_d,x_d); hold on; plot(0,0,'r*'); axis([-50 50 -50 50]);
 
 %figure 
@@ -219,7 +226,8 @@ end
 %%
 figure
 hist(r,1:2:80);
-close all
+xlabel('r')
+%close all
 
 
 

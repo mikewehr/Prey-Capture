@@ -1,4 +1,4 @@
-captureBatch1
+captureBatchJune2
 
 if ismac
     pathname = '/Users/crisniell/Dropbox/Prey capture/Prey_tracks/'
@@ -17,7 +17,7 @@ for f = 1:1%length(files)
         fn(fn=='\')='/';
     end
     if ~isempty(files(f).trackpts)
-    [ location(:,:,f) targ{f} body{f} r{f} thetaR{f} thetaSac{f} vhead{f} vbody{f} abody{f} vtarg{f} atarg{f} head{f} sub{f}] = analyzeCapture(fn,files(f).fps,files(f).scale,files(f).subj);
+    [ location(:,:,f) targ{f} r{f} thetaR{f} vhead{f} vtarg{f} atarg{f} head{f} sub{f}] = analyzeCapture(fn,files(f).fps,files(f).scale,files(f).subj);
      dist(f) = mean(r{f});   
     end
     
@@ -38,76 +38,79 @@ end
 %time to capture
 
 
-d = [mean(latency(lighting==1 & group==1)),...
-    mean(latency(lighting==0 & group==2)),...
-    mean(latency(lighting==1 & group==3)),...
-    mean(latency(lighting==0 & group==3)),...
-    mean(latency(lighting==1 & group==4)),...
-    mean(latency(lighting==0 & group==4)),...
-    mean(latency(lighting==1 & group==5)),...
-    mean(latency(lighting==0 & group==5))]/60;
-
-dMain = [mean(latency(lighting==1 & group==1)),...
-    mean(latency(lighting==0 & group==2)),...
-    mean(latency(lighting==1 & group==5)),...
-    mean(latency(lighting==0 & group==5))]/60;
-
-err = [std(latency(lighting==1 & group==1))/sqrt(sum(lighting==1 & group==1)),...%light premanipulation group
-    std(latency(lighting==0 & group==2))/sqrt(sum(lighting==0 & group==2)),...% dark exposure for the first time group, alternated with light trials
-    std(latency(lighting==1 & group==3))/sqrt(sum(lighting==1 & group==3)),...%light eye suture group
-    std(latency(lighting==0 & group==3))/sqrt(sum(lighting==0 & group==3)),...% dark eye suture group
-    std(latency(lighting==1 & group==4))/sqrt(sum(lighting==1 & group==4)),...%light, Blk background group
-    std(latency(lighting==0 & group==4))/sqrt(sum(lighting==0 & group==4)),...%dark Blk Background group
-    std(latency(lighting==1 & group==5))/sqrt(sum(lighting==1 & group==5)),...%light, EP'd group
-    std(latency(lighting==0 & group==5))/sqrt(sum(lighting==0 & group==5))]/60;%dark EP group
-
-errMain = [std(latency(lighting==1 & group==1))/sqrt(sum(lighting==1 & group==1)),...%light premanipulation group
-    std(latency(lighting==0 & group==2))/sqrt(sum(lighting==0 & group==2)),...% dark exposure for the first time group, alternated with light trials
-    std(latency(lighting==1 & group==5))/sqrt(sum(lighting==1 & group==5)),...%light, EP'd group
-    std(latency(lighting==0 & group==5))/sqrt(sum(lighting==0 & group==5))]/60;%dark EP group
-
-dEye = [mean(latency(lighting==1 & group==1)),...
-    mean(latency(lighting==0 & group==2)),...
-    mean(latency(lighting==1 & group==3)),...
-    mean(latency(lighting==0 & group==3))]/60;
-
-errEye = [std(latency(lighting==1 & group==1))/sqrt(sum(lighting==1 & group==1)),...
-    std(latency(lighting==0 & group==2))/sqrt(sum(lighting==0 & group==2)),...% dark exposure for the first time group, alternated with light trials
-    std(latency(lighting==1 & group==3))/sqrt(sum(lighting==1 & group==3)),...%light eye suture group
-    std(latency(lighting==0 & group==3))/sqrt(sum(lighting==0 & group==3))]/60;% dark eye suture group
-
-
-
-% dmed = [median(latency(lighting==1 & group==1)),...
-%     median(latency(lighting==0 & group==2)),...
-%     median(latency(lighting==1 & group==3)),...
-%     median(latency(lighting==0 & group==3)),...
-%     median(latency(lighting==1 & group==4)),...
-%     median(latency(lighting==0 & group==4)),...
-%     median(latency(lighting==1 & group==5)),...
-%     median(latency(lighting==0 & group==5))]/60;
-
-figure
-barweb(d,err)
-ylabel('time to caputure (s)')
-legend('Light','dark', 'ES light','ES Dark','BlkBgd light','BlkBgd dark','EP light', 'EP dark')
-
-figure
-barweb(dMain,errMain,'b')
-ylabel('time to capture (s)')
-
-figure
-% col=[1,1,1,0.2]
-barweb(dEye,errEye,'b')
-ylabel('time to capture (s)')
-legend('dark','ES light', 'ES dark');
-
-clear rhist speedhist thetahist tdhist tdhist_mv midtheta midtheta_mv spdist basin dRhist approachR
+% d = [mean(latency(lighting==1 & group==1)),...
+%     mean(latency(lighting==0 & group==2)),...
+%     mean(latency(lighting==1 & group==3)),...
+%     mean(latency(lighting==0 & group==3)),...
+%     mean(latency(lighting==1 & group==4)),...
+%     mean(latency(lighting==0 & group==4)),...
+%     mean(latency(lighting==1 & group==5)),...
+%     mean(latency(lighting==0 & group==5))]/60;
+% 
+% dMain = [mean(latency(lighting==1 & group==1)),...
+%     mean(latency(lighting==0 & group==2)),...
+%     mean(latency(lighting==1 & group==5)),...
+%     mean(latency(lighting==0 & group==5))]/60;
+% 
+% err = [std(latency(lighting==1 & group==1))/sqrt(sum(lighting==1 & group==1)),...%light premanipulation group
+%     std(latency(lighting==0 & group==2))/sqrt(sum(lighting==0 & group==2)),...% dark exposure for the first time group, alternated with light trials
+%     std(latency(lighting==1 & group==3))/sqrt(sum(lighting==1 & group==3)),...%light eye suture group
+%     std(latency(lighting==0 & group==3))/sqrt(sum(lighting==0 & group==3)),...% dark eye suture group
+%     std(latency(lighting==1 & group==4))/sqrt(sum(lighting==1 & group==4)),...%light, Blk background group
+%     std(latency(lighting==0 & group==4))/sqrt(sum(lighting==0 & group==4)),...%dark Blk Background group
+%     std(latency(lighting==1 & group==5))/sqrt(sum(lighting==1 & group==5)),...%light, EP'd group
+%     std(latency(lighting==0 & group==5))/sqrt(sum(lighting==0 & group==5))]/60;%dark EP group
+% 
+% errMain = [std(latency(lighting==1 & group==1))/sqrt(sum(lighting==1 & group==1)),...%light premanipulation group
+%     std(latency(lighting==0 & group==2))/sqrt(sum(lighting==0 & group==2)),...% dark exposure for the first time group, alternated with light trials
+%     std(latency(lighting==1 & group==5))/sqrt(sum(lighting==1 & group==5)),...%light, EP'd group
+%     std(latency(lighting==0 & group==5))/sqrt(sum(lighting==0 & group==5))]/60;%dark EP group
+% 
+% dEye = [mean(latency(lighting==1 & group==1)),...
+%     mean(latency(lighting==0 & group==2)),...
+%     mean(latency(lighting==1 & group==3)),...
+%     mean(latency(lighting==0 & group==3))]/60;
+% 
+% errEye = [std(latency(lighting==1 & group==1))/sqrt(sum(lighting==1 & group==1)),...
+%     std(latency(lighting==0 & group==2))/sqrt(sum(lighting==0 & group==2)),...% dark exposure for the first time group, alternated with light trials
+%     std(latency(lighting==1 & group==3))/sqrt(sum(lighting==1 & group==3)),...%light eye suture group
+%     std(latency(lighting==0 & group==3))/sqrt(sum(lighting==0 & group==3))]/60;% dark eye suture group
+% 
+% 
+% 
+% % dmed = [median(latency(lighting==1 & group==1)),...
+% %     median(latency(lighting==0 & group==2)),...
+% %     median(latency(lighting==1 & group==3)),...
+% %     median(latency(lighting==0 & group==3)),...
+% %     median(latency(lighting==1 & group==4)),...
+% %     median(latency(lighting==0 & group==4)),...
+% %     median(latency(lighting==1 & group==5)),...
+% %     median(latency(lighting==0 & group==5))]/60;
+% 
+% figure
+% barweb(d,err)
+% ylabel('time to caputure (s)')
+% legend('Light','dark', 'ES light','ES Dark','BlkBgd light','BlkBgd dark','EP light', 'EP dark')
+% 
+% figure
+% barweb(dMain,errMain,'b')
+% ylabel('time to capture (s)')
+% 
+% figure
+% % col=[1,1,1,0.2]
+% barweb(dEye,errEye,'b')
+% ylabel('time to capture (s)')
+% legend('dark','ES light', 'ES dark');
+% 
+% clear rhist speedhist thetahist tdhist tdhist_mv midtheta midtheta_mv spdist basin dRhist approachR
 dbins = 1.5:2.5:35; spdbins = 1.25:2.5:50; thetabins = linspace(-150, 150, 13);
 dbinsMid=5:2.5:35;
 grouplabels = {'null','dark','suture','black bgd','earplug','','','','',''};
 lightlabels = {'light','dark'};
-close all
+
+%close all
+
+
 makeMov=0;
 
 % trials = find(group ==1);
@@ -131,11 +134,14 @@ for tr = 1:1%length(head); % trials(example)%44 is the start of the newly added 
     clear vid;
     if makeMov;
         fn = [pathname files(tr).Moviefile];
-        
+        movieObj = VideoReader(fn)
         %%% load raw avi, downsampled in space and time by factor 'bin'
         bin=5;
         if ~isempty(files(tr).Moviefile)
-            vid = loadMouseMovie(fn,bin,files(tr).FrameS,files(tr).FrameEnd);% files(tr).FrameS,files(tr).FrameEnd
+           numFrame = get(movieObj, 'Duration')*get(movieObj, 'FrameRate');% should be a numframes parameter in object but there isn't??
+            vid = loadMouseMovie(fn,bin,1,numFrame);% files(tr).FrameS,files(tr).FrameEnd
+
+            %vid = loadMouseMovie(fn,bin,files(tr).FrameS,files(tr).FrameEnd);% files(tr).FrameS,files(tr).FrameEnd
             %frameRange = 1:min(files(tr).FrameEnd, max(find(~isnan(thetaR{tr}))))/bin;%sometimes the size of the framerange is off??
             frameRange=1:(files(tr).FrameEnd-files(tr).FrameS)/bin;
             fn = [pathname files(tr).Moviefile];
@@ -218,8 +224,8 @@ for tr = 1:1%length(head); % trials(example)%44 is the start of the newly added 
         thetaSmoothC{tr}=thetaSC;
         
         
-        %         figure
-        %         hist(thetaS(rangeMid>5& speed>5),thetabins)
+%                 figure
+%                 hist(thetaS(rangeMid>5& speed>5),thetabins)
         %
         thetahist(:,tr) = hist(thetaSC(1:dur),thetabins)/dur;
         
@@ -238,7 +244,8 @@ for tr = 1:1%length(head); % trials(example)%44 is the start of the newly added 
         plot(speed/25,'g');
         plot(r{tr}(1:dur)/10,'b');
         %plot(abs(th)/180,'r');
-        legend('speed','dist','theta'); xlim([0 3000])
+        legend('speed','dist','theta'); 
+        %xlim([0 3000])
         
         title(sprintf('trial %d group %d light %d',tr,group(tr),lighting(tr)));
         
@@ -282,7 +289,7 @@ for tr = 1:1%length(head); % trials(example)%44 is the start of the newly added 
     %this gets rid of that "contact"
     
     if length(contactEnd) > length(contactStart)
-        contactEnd=contactEnd(2:end)
+        contactEnd=contactEnd(2:end);
     end
     
     
@@ -324,7 +331,7 @@ for tr = 1:1%length(head); % trials(example)%44 is the start of the newly added 
         state(roam,tr)= sum(range>10 & speed>4)/notCaught;
     end
     
-    close(gcf)
+%     close(gcf)
     
     deltaR = diff(rangeS(1:dur));
     filt = ones(15,1);
@@ -468,7 +475,7 @@ for tr = 1:1%length(head); % trials(example)%44 is the start of the newly added 
 end
 
 %%
-close all
+%close all
 Gr={'Light','Dark','EPL','EPD','ESL','ESD'};
 colorlabel = 'bkgrcm';
 for cond = 1:6
@@ -498,14 +505,21 @@ for cond = 1:6
     %% calc pre approach cricket speeds
     clear CKspeed1st
     for i=1:length(trials)
-    CKspeed1st(i)=avgCspeedSucc{trials(i)}(1);
-    preCKspeed{cond}=CKspeed1st;
+        CKspeed1st(i)=avgCspeedSucc{trials(i)}(1);
+        preCKspeed{cond}=CKspeed1st;
     end
     
     g= preCKspeed{1};
     h= preCKspeed{2}; 
     k= preCKspeed{3}
     l= preCKspeed{4}
+    
+    
+    return
+    %the code below this point compiles data cross groups and conditions
+    %     (which we don't have yet)
+    %     mw 6-5-2017
+    
     
 %     ghist=hist(g,0:2:40);% see and hear
 %     hhist=hist(h,0:2:40);% only hear
