@@ -1,19 +1,50 @@
 
 function get_tracks_groupdata
 
-filename='7521_trial2_day2_fakesounds_arenas_1_arena 1_frames_1_7927_result_1.mat';
-path='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 9 Trials/Mouse 7521 June 9/results';
-
 figure(1);clf
 figure(2);clf
 figure(3);clf
 figure(4);clf
 figure(5);clf
 
-analyze_tracks(path, filename)
+% filename='7521_trial2_day2_fakesounds_arenas_1_arena 1_frames_1_7927_result_1.mat';
+% path='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 9 Trials/Mouse 7521 June 9/results';
+
+j=0;
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 15 Trials (All Real Sounds)/7520/results';
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 15 Trials (All Real Sounds)/7521/results';
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 15 Trials (All Real Sounds)/7522/results';
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 15 Trials (All Real Sounds)/7523/results';
+
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 16 Trials (All Real Sounds)/7520/results';
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 16 Trials (All Real Sounds)/7521/results';
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 16 Trials (All Real Sounds)/7522/results';
+j=j+1;
+path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 16 Trials (All Real Sounds)/7523/results';
+
+for j=1:length(path)
+    cd(path{j})
+    d=dir('*result_1.mat');
+    for i=1:length(d)
+        filename=d.name;
+        analyze_tracks(pwd, filename)
+    end
+end
+
+%analyze_tracks(path, filename)
 
 
-
+figure(5)
+grey=[.8 .8 .8];
+h=findobj('parent', gca, 'color', grey)
+uistack(h,'bottom')
 
 
 function analyze_tracks(path, filename)
@@ -53,6 +84,19 @@ if s2(1)<prewin
 end
 
 xy=(Res.pD.final_body_positions); %good
+
+if (length(xy)-s2(end))<postwin
+    oldpostwin=postwin;
+    postwin=length(xy)-s2(end);
+    fprintf('\nnot enought time for postwin %d, changing post-sound window to %d frames', oldpostwin, postwin)
+end
+if (length(xy)-s1(end))<postwin
+    oldpostwin=postwin;
+    postwin=length(xy)-s1(end);
+    fprintf('\nnot enought time for postwin %d, changing post-sound window to %d frames', oldpostwin, postwin)
+end
+
+
 for i=1:length(s1)
     s1tracks(i,:,:)=xy(s1(i)-prewin:s1(i)+postwin,:);
 end
