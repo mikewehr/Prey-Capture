@@ -29,8 +29,15 @@ path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 16 T
 j=j+1;
 path{j}='/Volumes/C/Users/lab/Desktop/Prey Capture/Crickets and Sounds/June 16 Trials (All Real Sounds)/7523/results';
 
+    
 for j=1:length(path)
-    cd(path{j})
+    newpath=path{j};
+    if ispc
+        newpath=strrep(newpath, '/Volumes/C', 'C:');
+        newdatadir=strrep(newpath, '\', '/');
+    end
+    
+    cd(newpath)
     d=dir('*result_1.mat');
     for i=1:length(d)
         filename=d.name;

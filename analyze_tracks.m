@@ -42,6 +42,7 @@ if s2(1)<prewin
 end
 
 xy=(Res.pD.final_body_positions); %good
+xy=(Res.pD.final_nose_positions); %good
 for i=1:length(s1)
     s1tracks(i,:,:)=xy(s1(i)-prewin:s1(i)+postwin,:);
 end
