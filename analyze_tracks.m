@@ -31,6 +31,8 @@ s2=[s2all(1) s2all(find(diff(s2all)>1)+1)];
 
 prewin=0;
 postwin=300;
+xy=(Res.pD.final_body_positions); %body
+%xy=(Res.pD.final_nose_positions); %nose
 
 if s1(1)<prewin
     prewin=s1(1)-1;
@@ -40,9 +42,16 @@ if s2(1)<prewin
     prewin=s2(1)-1;
     fprintf('\nsound presented on frame %d, changing pre-sound window to %d frames', prewin, prewin)
 end
-
-xy=(Res.pD.final_body_positions); %good
-xy=(Res.pD.final_nose_positions); %good
+if (length(xy)-s2(end))<postwin
+    oldpostwin=postwin;
+    postwin=length(xy)-s2(end);
+    fprintf('\nnot enought time for postwin %d, changing post-sound window to %d frames', oldpostwin, postwin)
+end
+if (length(xy)-s1(end))<postwin
+    oldpostwin=postwin;
+    postwin=length(xy)-s1(end);
+    fprintf('\nnot enought time for postwin %d, changing post-sound window to %d frames', oldpostwin, postwin)
+end
 for i=1:length(s1)
     s1tracks(i,:,:)=xy(s1(i)-prewin:s1(i)+postwin,:);
 end
