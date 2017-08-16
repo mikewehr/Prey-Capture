@@ -1,21 +1,30 @@
 % AnalyzeBonsaiTrackingData
 
-dataroot='/Volumes/C/Users/lab/Desktop/Prey Capture/Bonsai Tracking Data/';
+dataroot='/Volumes/C/Users/lab/Desktop/Prey Capture/Bonsai Tracking Data';
 datapath='RT';
 %filename='data2017-07-27T11_14_46.txt';
 % filename='data2017-07-27T13_18_46.txt';
-filename='data2017-08-01T14_52_27.txt';
+filename='data2017-08-14T15_56_16.txt';
+
+start=0; %s, time right before cricket drop
+
+%out=LoadBonsaiTracks(fullfile(dataroot, datapath), filename);
+out=LoadBonsaiTracks(dataroot, filename);
 
 
-out=LoadBonsaiTracks(fullfile(dataroot, datapath), filename);
-
-
-
+framerate=30;
 mouseCOMxy=out.mouseCOMxy;
 mouseNosexy=out.mouseNosexy;
 cricketxy=out.cricketxy;
+
+%trim
+start_frames=framerate*start;
+if start_frames==0 start_frames=1;end
+mouseCOMxy=mouseCOMxy(start_frames:end);
+mouseNosexy=mouseNosexy(start_frames:end);
+cricketxy=cricketxy(start_frames:end);
+
 t=1:length(mouseCOMxy);
-framerate=30;
 t=t/framerate; % t is in seconds
 
 figure
@@ -81,7 +90,7 @@ plot(mouseCOMxy(:,1), mouseCOMxy(:,2), mouseNosexy(:,1), mouseNosexy(:,2))
 
 figure
 clf
-region=500:1500;
+region=1:10000;
 plot(smouseCOMx(region), smouseCOMy(region), 'b', smouseNosex(region), smouseNosey(region), 'r', scricketx(region), scrickety(region), 'g')
 
 hold on
