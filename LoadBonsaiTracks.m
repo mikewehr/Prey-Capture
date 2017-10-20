@@ -1,7 +1,6 @@
 function out = LoadBonsaiTracks(datapath, filename)
 
 
-
 cd(datapath)
 %check for outfile and load if present
 [p, f, e]=fileparts(filename);
