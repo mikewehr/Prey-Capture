@@ -24,7 +24,7 @@ elseif exist(txtfilename, 'file')
     i=0;
     while 1
         ln=fgetl(fid);
-       if ~mod(i, 1000) waitbar(ftell(fid)/filesize, wb);end
+        if ~mod(i, 1000) waitbar(ftell(fid)/filesize, wb);end
         if ~ischar(ln), break, end
         ln2=strrep(ln, '(', '');
         ln3=strrep(ln2, ')', '');
@@ -41,9 +41,11 @@ elseif exist(txtfilename, 'file')
     
     fclose(fid);
     
-    mouseCOMxy=Mread(:,1:2);
-    mouseNosexy=Mread(:,3:4);
-    cricketxy=Mread(:,5:6);
+    %data is repeated 5 times (the way bonsai writes it)
+    %so take every 5th point
+    mouseCOMxy=Mread(1:5:end,1:2);
+    mouseNosexy=Mread(1:5:end,3:4);
+    cricketxy=Mread(1:5:end,5:6);
     
     
     out.mouseCOMxy=mouseCOMxy;
