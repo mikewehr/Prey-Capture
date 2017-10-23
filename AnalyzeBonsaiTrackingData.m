@@ -1,8 +1,11 @@
 % AnalyzeBonsaiTrackingData
 
 % dataroot='/Volumes/C/Users/lab/Desktop/Prey Capture/Bonsai Tracking Data/';
-% dataroot= 'C:\Users\lab\Desktop\Prey Capture\Bonsai Tracking Data';
-datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage 6\RT\Good videos RT'
+datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage 6\RT\Good videos RT';
+if ismac
+    datapath= strrep(datapath, '\', '/');
+    datapath= strrep(datapath, 'C:', '/Volumes/C');
+end
 
 %datapath='MAtlab videos';
 %filename='data2017-07-27T14_36_50.txt';
@@ -44,20 +47,68 @@ plot(cricketxy(:,1), cricketxy(:,2))
 title('raw data')
 legend('mouse COM', 'mouse nose', 'cricket')
 
-%try to clean up cricket tracks
-figure
-plot(t, cricketxy(:,1), 'o-')
-hold on
-plot(t, mouseCOMxy(:,1), 'o-')
 
 
+% clean up cricket tracks (in 2D)
+dfc1=diff(cricketxy);
 thresh=10; %plausible cricket jump threshold
-for i=1:100
-    plot(diff(cricketxy(:,1)), 'o-')
-    errframes=find(abs(diff(cricketxy(:,1)))>thresh);
-    cricketxy(errframes)=cricketxy(errframes-1);
-    pause(.05)
+errframes1=find(abs(dfc1)>thresh);
+clean_cricketxy=cricketxy;
+for ef=errframes1'
+    if ef>3 & ef<length(cricketxy)-3
+        clean_cricketxy(ef,:)=median(cricketxy(ef-3:ef+3,:));
+    end
 end
+
+% repeat
+dfc2=diff(clean_cricketxy);
+errframes2=find(abs(dfc2)>thresh);
+clean2_cricketxy=clean_cricketxy;
+for ef=errframes2'
+    if ef>3 & ef<length(cricketxy)-3
+        clean2_cricketxy(ef,:)=median(clean_cricketxy(ef-3:ef+3,:));
+    end
+end
+
+
+
+% figure
+% hold on
+% plot(dfc1, 'o-')
+% plot(errframes1,dfc1(errframes1), 'r*')
+% xlim([200 300])
+
+%how good a job did we do cleaning cricket tracks?
+figure
+subplot(211)
+title('original vs. cleaned cricket tracks')
+hold on
+plot(t, cricketxy(:,1), 'o-')
+plot(t, clean_cricketxy(:,1), 'go-')
+plot(t, clean2_cricketxy(:,1), 'ro-')
+ylabel('cricket x-pos')
+legend('original', 'first pass', 'second pass')
+subplot(212)
+hold on
+plot(t, cricketxy(:,2), 'o-')
+plot(t, clean_cricketxy(:,2), 'go-')
+plot(t, clean2_cricketxy(:,2), 'ro-')
+ylabel('cricket y-pos')
+xlabel('time, s')
+
+figure
+hold on
+title('cleand cricket tracks')
+plot(cricketxy(:,1), cricketxy(:,2), 'g')
+plot(clean2_cricketxy(:,1), clean2_cricketxy(:,2))
+legend('original', 'cleaned')
+set(gca, 'ydir', 'reverse')
+
+%%%%%
+
+
+
+
 
 %smooth
 % 
@@ -66,8 +117,8 @@ smouseCOMx=filtfilt(b,a,mouseCOMxy(:,1));
 smouseCOMy=filtfilt(b,a,mouseCOMxy(:,2));
 smouseNosex=filtfilt(b,a,mouseNosexy(:,1));
 smouseNosey=filtfilt(b,a,mouseNosexy(:,2));
-scricketx=filtfilt(b,a,cricketxy(:,1));
-scrickety=filtfilt(b,a,cricketxy(:,2));
+scricketx=filtfilt(b,a,clean2_cricketxy(:,1));
+scrickety=filtfilt(b,a,clean2_cricketxy(:,2));
 
 
 % smouseNosex=conv(mouseNosexy(:,1), g, 'same');
@@ -78,6 +129,7 @@ scrickety=filtfilt(b,a,cricketxy(:,2));
 figure
 plot(smouseCOMx, smouseCOMy)
 title('mouse COM, smoothed')
+set(gca, 'ydir', 'reverse')
 
 
 %mouse bearing: mouse body-to-nose angle, in absolute coordinates
@@ -106,13 +158,13 @@ hold on
 plot(azimuth2)
 xlabel('frames')
 ylabel('azimuth in degrees')
-title('two azimuth computations')
+title('comparison of 2 azimuth computations')
 legend('azimuth (COM-to-cricket)', 'azimuth (nose-to-cricket)')
 
 %range (distance to target)
 range=sqrt(deltax_cnose.^2 + deltay_cnose.^2);
 
-%speed
+%mouse speed
 speed=sqrt(diff(smouseCOMx).^2 + diff(smouseCOMx).^2);
 [b,a]=butter(1, .01);
 speed=filtfilt(b,a,speed);
@@ -121,12 +173,10 @@ figure
 plot(tspeed, speed)
 xlabel('time, s')
 ylabel('speed, px/s')
+title('mouse speed vs. time')
 
 figure
-plot(t, range, t, azimuth) %weird because they are different units (degrees, pixels)
-legend('range', 'azimuth')
-
-figure
+title('range, azimuth, and speed over time (mismatched units')
 plot(tspeed, 100*speed, t, range, t, azimuth) %weird because they are different units 
 legend('speed', 'range', 'azimuth')
 
@@ -134,31 +184,28 @@ figure
 plot(speed, range(2:end))
 xlabel('speed')
 ylabel('range')
+title('range vs. speed')
 
 figure
 plot(range, azimuth, '.')
 xlabel('range, pixels')
 ylabel('azimuth, degrees')
+title('azimuth vs. range')
 
+
+% %plotting a specific window in time
 % figure
-% plot(mouseCOMxy(:,1))
+% clf
+% region=500:1500;
+% plot(smouseCOMx(region), smouseCOMy(region), 'b', smouseNosex(region), smouseNosey(region), 'r', scricketx(region), scrickety(region), 'g')
+% 
+% hold on
+% for r=100:100:1000
+%     line([smouseCOMx(r) smouseCOMx(r)+deltax(r)], [smouseCOMy(r) smouseCOMy(r)+deltay(r)])
+%     fprintf('\ndeltax: %.1f, deltay: %.1f, angle: %.1f', deltax(r), deltay(r), atan2d(deltay(r),deltax(r)))
+% end
 
-% figure
-% plot(mouseCOMxy(:,1), mouseCOMxy(:,2), mouseNosexy(:,1), mouseNosexy(:,2))
-
-%plotting a specific window in time
-figure
-clf
-region=500:1500;
-plot(smouseCOMx(region), smouseCOMy(region), 'b', smouseNosex(region), smouseNosey(region), 'r', scricketx(region), scrickety(region), 'g')
-
-hold on
-for r=100:100:1000
-    line([smouseCOMx(r) smouseCOMx(r)+deltax(r)], [smouseCOMy(r) smouseCOMy(r)+deltay(r)])
-    fprintf('\ndeltax: %.1f, deltay: %.1f, angle: %.1f', deltax(r), deltay(r), atan2d(deltay(r),deltax(r)))
-end
-
-
+%
 
 
 
