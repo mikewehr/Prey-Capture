@@ -43,8 +43,8 @@ elseif exist(txtfilename, 'file')
     
     %data is repeated 5 times (the way bonsai writes it)
     %so take every 5th point
-    mouseCOMxy=Mread(1:5:end,1:2);
-    mouseNosexy=Mread(1:5:end,3:4);
+    mouseNosexy=Mread(1:5:end,1:2);
+    mouseCOMxy=Mread(1:5:end,3:4);
     cricketxy=Mread(1:5:end,5:6);
     
     

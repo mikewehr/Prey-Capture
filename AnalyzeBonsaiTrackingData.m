@@ -1,4 +1,6 @@
 % AnalyzeBonsaiTrackingData
+close all
+clear
 
 % dataroot='/Volumes/C/Users/lab/Desktop/Prey Capture/Bonsai Tracking Data/';
 datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage 6\RT\Good videos RT';
@@ -10,8 +12,9 @@ end
 %datapath='MAtlab videos';
 %filename='data2017-07-27T14_36_50.txt';
 %filename='data2017-07-27T15_58_42.txt';
-filename='data2017-10-11T12_03_04.txt';
-% filename= 'RT810T1.txt';
+
+%filename='data2017-10-11T12_03_04.txt';
+filename='data2017-10-11T12_10_25.txt';
 
 out=LoadBonsaiTracks(datapath, filename);
 
@@ -22,12 +25,12 @@ mouseNosexy=out.mouseNosexy;
 cricketxy=out.cricketxy;
 framerate=30; 
 
+start_frame=1;
+stop_frame=length(out.mouseCOMxy); %to use whole video
 % trim
 % start=1; %seconds
 % start_frame=start*framerate;
-stop_frame= 450 ;
-stop_frame=length(out.mouseCOMxy); %to use whole video
-start_frame=1;
+%stop_frame= 450 ;
 
 mouseCOMxy=mouseCOMxy(start_frame:stop_frame,:);
 mouseNosexy=mouseNosexy(start_frame:stop_frame,:);
@@ -98,7 +101,7 @@ xlabel('time, s')
 
 figure
 hold on
-title('cleand cricket tracks')
+title('cleaned cricket tracks')
 plot(cricketxy(:,1), cricketxy(:,2), 'g')
 plot(clean2_cricketxy(:,1), clean2_cricketxy(:,2))
 legend('original', 'cleaned')
@@ -126,40 +129,157 @@ scrickety=filtfilt(b,a,clean2_cricketxy(:,2));
 % scricketx=conv(cricketxy(:,1), g, 'same');
 % scrickety=conv(cricketxy(:,2), g, 'same');
 
-figure
-plot(smouseCOMx, smouseCOMy)
-title('mouse COM, smoothed')
+ftracks=figure('position', [418        1384         788        1069]);
+%subplot(311)
+           ax= axes('pos', [0.1300    0.7093    0.52    0.22]);
+hold on
+plot(smouseCOMx, smouseCOMy, smouseNosex, smouseNosey, scricketx, scrickety)
+title('mouse & cricket positions, smoothed')
+legend('mouse COM', 'mouse nose', 'cricket', 'Location', 'EastOutside')
 set(gca, 'ydir', 'reverse')
+
+%animate the mouse and cricket
+if(0)
+    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
+    for f=1:length(smouseCOMx)
+        hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
+            smouseNosex(f), smouseNosey(f), 'ro', ...
+            scricketx(f), scrickety(f), 'ko');
+        set(h, 'visible', 'off');
+        h=hnew;
+        pause(.01)
+    end
+end
+
+%atan2d does the full circle (-180 to 180)
+%atand does the half circle (-90 to 90)
 
 
 %mouse bearing: mouse body-to-nose angle, in absolute coordinates
 deltax=smouseNosex-smouseCOMx;
 deltay=smouseNosey-smouseCOMy;
-mouse_bearing=atan2d(deltay, deltax);
+ mouse_bearing=atan2d(deltay, deltax);
+%mouse_bearing=atand(deltay./deltax);
 
 %mouseCOM-to-cricket angle, in absolute coordinates
 deltax_ccom=scricketx-smouseCOMx;
 deltay_ccom=scrickety-smouseCOMy;
-cricket_angle_com=atan2d(deltay_ccom, deltax_ccom);
+ cricket_angle_com=atan2d(deltay_ccom, deltax_ccom);
+%cricket_angle_com=atand(deltay_ccom./ deltax_ccom);
 
 %mouseNose-to-cricket angle, in absolute coordinates
 %(should be nearly identical to mouseCOM-to-cricket angle)
 deltax_cnose=scricketx-smouseNosex;
 deltay_cnose=scrickety-smouseNosey;
-cricket_angle_nose=atan2d(deltay_cnose, deltax_cnose);
+ cricket_angle_nose=atan2d(deltay_cnose, deltax_cnose);
+%cricket_angle_nose=atand(deltay_cnose./ deltax_cnose);
 
 %azimuth: relative angle between mouse bearing and mouseCOM-to-cricket angle
 azimuth2=mouse_bearing-cricket_angle_com;
 azimuth=mouse_bearing-cricket_angle_nose;
 
 figure
+hold on
+plot(cricket_angle_com)
+plot(cricket_angle_nose)
+plot(mouse_bearing)
+title('absolute angles')
+legend('mouse COM to cricket', 'mouse nose to cricket', 'mouse bearing')
+
+mouse_bearing_unwrapped = 180/pi * unwrap(mouse_bearing * pi/180);
+cricket_angle_com_unwrapped = 180/pi * unwrap(cricket_angle_com * pi/180);
+cricket_angle_nose_unwrapped = 180/pi * unwrap(cricket_angle_nose * pi/180);
+
+azimuth4=mouse_bearing_unwrapped-cricket_angle_com_unwrapped;
+azimuth3=mouse_bearing_unwrapped-cricket_angle_nose_unwrapped;
+
+% fangles=figure;
+figure(ftracks)
+subplot(312)
+hold on
+plot(cricket_angle_com_unwrapped)
+plot(cricket_angle_nose_unwrapped)
+plot(mouse_bearing_unwrapped)
+title('unwrapped absolute angles')
+legend('mouse COM to cricket', 'mouse nose to cricket', 'mouse bearing')
+
+%animate the mouse and cricket
+if(0)
+    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
+    for f=1:length(smouseCOMx)
+        hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
+            smouseNosex(f), smouseNosey(f), 'ro', ...
+            scricketx(f), scrickety(f), 'ko');
+        set(h, 'visible', 'off');
+        h=hnew;
+        pause(.01)
+    end
+end
+
+figure;
 plot(azimuth)
 hold on
 plot(azimuth2)
+plot(azimuth3)
+plot(azimuth4)
 xlabel('frames')
 ylabel('azimuth in degrees')
 title('comparison of 2 azimuth computations')
-legend('azimuth (COM-to-cricket)', 'azimuth (nose-to-cricket)')
+legend('azimuth (COM-to-cricket)', 'azimuth (nose-to-cricket)', 'unwrapped (COM-to-cricket)', 'unwrapped (nose-to-cricket)')
+
+% fazimuth=figure;
+figure(ftracks)
+subplot(313)
+hold on
+plot(azimuth3)
+xlabel('frames')
+ylabel('azimuth in degrees')
+title(' azimuth (nose-to-cricket, unwrapped)')
+print -dpsc2 'analysis_plots.ps' -append -bestfit
+
+
+%animate the mouse and cricket, along with angles, write to video
+if(1)
+    vidfname=strrep(filename, 'data', 'analysis');
+    vidfname=strrep(vidfname, '.txt', '.avi');
+    v=VideoWriter(vidfname);
+    open(v);
+    figure(ftracks)
+    axes(ax) %     subplot(311)
+    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
+    %     figure(fangles)
+    subplot(312)
+    h2=plot(1,cricket_angle_nose_unwrapped(1), 'bo', 1, mouse_bearing_unwrapped(1), 'ro');
+    %     figure(fazimuth)
+    subplot(313)
+    h3=plot(azimuth3(1), 'bo');
+    
+    
+    for f=1:length(smouseCOMx)
+        axes(ax)
+        %subplot(311) %figure(ftracks)
+        hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
+            smouseNosex(f), smouseNosey(f), 'ro', ...
+            scricketx(f), scrickety(f), 'ko');
+        set(h, 'visible', 'off');
+        h=hnew;
+        
+        subplot(312) %figure(fangles)
+        hnew2=plot(f, cricket_angle_nose_unwrapped(f), 'bo', f, mouse_bearing_unwrapped(f), 'ro');
+        set(h2, 'visible', 'off');
+        h2=hnew2;
+        
+        subplot(313) %figure(fazimuth)
+        hnew3=plot(f, azimuth3(f), 'bo');
+        set(h3, 'visible', 'off');
+        h3=hnew3;
+        
+        drawnow
+        frame = getframe(gcf);
+        writeVideo(v,frame);
+    end
+    close(v)
+end
 
 %range (distance to target)
 range=sqrt(deltax_cnose.^2 + deltay_cnose.^2);
@@ -177,20 +297,34 @@ title('mouse speed vs. time')
 
 figure
 title('range, azimuth, and speed over time (mismatched units')
-plot(tspeed, 100*speed, t, range, t, azimuth) %weird because they are different units 
+plot(tspeed, 100*speed, t, range, t, azimuth3) %weird because they are different units 
 legend('speed', 'range', 'azimuth')
+xlabel('time, s')
+ylabel('speed, px/s')
+print -dpsc2 'analysis_plots.ps' -append
 
 figure
-plot(speed, range(2:end))
-xlabel('speed')
+plot(speed, range(2:end), 'k')
+hold on
+numframes=length(speed);
+cmap=colormap;
+for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
+for f=1:numframes
+    plot(speed(f), range(1+f), '.', 'color', cmap2(f,:))
+end
+text(speed(1), range(2), 'start')
+text(speed(end), range(end), 'end')
+    xlabel('speed')
 ylabel('range')
 title('range vs. speed')
+print -dpsc2 'analysis_plots.ps' -append
 
 figure
 plot(range, azimuth, '.')
 xlabel('range, pixels')
 ylabel('azimuth, degrees')
 title('azimuth vs. range')
+print -dpsc2 'analysis_plots.ps' -append
 
 
 % %plotting a specific window in time
