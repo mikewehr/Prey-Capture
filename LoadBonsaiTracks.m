@@ -1,9 +1,10 @@
-function out = LoadBonsaiTracks(datapath, filename)
+function out = LoadBonsaiTracks(datapath)
 
 
-cd(datapath)
+%cd(datapath)
 %check for outfile and load if present
-[p, f, e]=fileparts(filename);
+[p, f, e]=fileparts(datapath);
+cd(p)
 outfilename=sprintf('%s.mat', f);
 txtfilename=sprintf('%s.txt', f);
 if exist(outfilename, 'file')

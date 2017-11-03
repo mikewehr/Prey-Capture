@@ -1,10 +1,15 @@
-% AnalyzeBonsaiTrackingData
+function AnalyzeBonsaiTrackingData(datapath, start_frame, stop_frame)
 close all
-clear
 
-% dataroot='/Volumes/C/Users/lab/Desktop/Prey Capture/Bonsai Tracking Data/';
-datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage5\RT\10-27';
-if ismac
+if nargin==0
+    datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage5\RT\10-27';
+    start_frame=1;
+    stop_frame=[];
+    
+end
+    
+%adjust filenames to work on a mac
+  if ismac
     datapath= strrep(datapath, '\', '/');
     datapath= strrep(datapath, 'C:', '/Volumes/C');
 end
@@ -14,23 +19,23 @@ end
 %filename='data2017-07-27T15_58_42.txt';
 
 %filename='data2017-10-11T12_03_04.txt';
-filename='data2017-10-27T13_07_35.txt';
+%filename='data2017-10-27T13_07_35.txt';
 
-out=LoadBonsaiTracks(datapath, filename);
+out=LoadBonsaiTracks(datapath);
 
-
+if isempty(stop_frame)
+    stop_frame=length(out.mouseCOMxy); %to use whole video
+end
 
 mouseCOMxy=out.mouseCOMxy;
 mouseNosexy=out.mouseNosexy;
 cricketxy=out.cricketxy;
 framerate=30; 
 
-start_frame=35;
-stop_frame=length(out.mouseCOMxy); %to use whole video
 % trim
 % start=1; %seconds
 % start_frame=start*framerate;
-stop_frame= round(9*30) ;
+% stop_frame= round(9*30) ;
 
 mouseCOMxy=mouseCOMxy(start_frame:stop_frame,:);
 mouseNosexy=mouseNosexy(start_frame:stop_frame,:);
