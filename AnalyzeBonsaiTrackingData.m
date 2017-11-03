@@ -3,7 +3,7 @@ close all
 clear
 
 % dataroot='/Volumes/C/Users/lab/Desktop/Prey Capture/Bonsai Tracking Data/';
-datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage 6\RT\Good videos RT';
+datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage5\RT\10-27';
 if ismac
     datapath= strrep(datapath, '\', '/');
     datapath= strrep(datapath, 'C:', '/Volumes/C');
@@ -14,7 +14,7 @@ end
 %filename='data2017-07-27T15_58_42.txt';
 
 %filename='data2017-10-11T12_03_04.txt';
-filename='data2017-10-11T12_10_25.txt';
+filename='data2017-10-27T13_07_35.txt';
 
 out=LoadBonsaiTracks(datapath, filename);
 
@@ -25,12 +25,12 @@ mouseNosexy=out.mouseNosexy;
 cricketxy=out.cricketxy;
 framerate=30; 
 
-start_frame=1;
+start_frame=35;
 stop_frame=length(out.mouseCOMxy); %to use whole video
 % trim
 % start=1; %seconds
 % start_frame=start*framerate;
-%stop_frame= 450 ;
+stop_frame= round(9*30) ;
 
 mouseCOMxy=mouseCOMxy(start_frame:stop_frame,:);
 mouseNosexy=mouseNosexy(start_frame:stop_frame,:);
@@ -139,17 +139,17 @@ legend('mouse COM', 'mouse nose', 'cricket', 'Location', 'EastOutside')
 set(gca, 'ydir', 'reverse')
 
 %animate the mouse and cricket
-if(0)
-    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
-    for f=1:length(smouseCOMx)
-        hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
-            smouseNosex(f), smouseNosey(f), 'ro', ...
-            scricketx(f), scrickety(f), 'ko');
-        set(h, 'visible', 'off');
-        h=hnew;
-        pause(.01)
-    end
-end
+% if(0)
+%     h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
+%     for f=1:length(smouseCOMx)
+%         hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
+%             smouseNosex(f), smouseNosey(f), 'ro', ...
+%             scricketx(f), scrickety(f), 'ko');
+%         set(h, 'visible', 'off');
+%         h=hnew;
+%         pause(.01)
+%     end
+% end
 
 %atan2d does the full circle (-180 to 180)
 %atand does the half circle (-90 to 90)
@@ -204,17 +204,17 @@ title('unwrapped absolute angles')
 legend('mouse COM to cricket', 'mouse nose to cricket', 'mouse bearing')
 
 %animate the mouse and cricket
-if(0)
-    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
-    for f=1:length(smouseCOMx)
-        hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
-            smouseNosex(f), smouseNosey(f), 'ro', ...
-            scricketx(f), scrickety(f), 'ko');
-        set(h, 'visible', 'off');
-        h=hnew;
-        pause(.01)
-    end
-end
+% if(0)
+%     h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
+%     for f=1:length(smouseCOMx)
+%         hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
+%             smouseNosex(f), smouseNosey(f), 'ro', ...
+%             scricketx(f), scrickety(f), 'ko');
+%         set(h, 'visible', 'off');
+%         h=hnew;
+%         pause(.01)
+%     end
+% end
 
 figure;
 plot(azimuth)
@@ -235,11 +235,14 @@ plot(azimuth3)
 xlabel('frames')
 ylabel('azimuth in degrees')
 title(' azimuth (nose-to-cricket, unwrapped)')
-print -dpsc2 'analysis_plots.ps' -append -bestfit
-
+if exist('analysis_plots.ps')==2
+    print -dpsc2 'analysis_plots.ps' -append -bestfit
+else
+    print -dpsc2 'analysis_plots.ps' -bestfit
+end
 
 %animate the mouse and cricket, along with angles, write to video
-if(1)
+if 1
     vidfname=strrep(filename, 'data', 'analysis');
     vidfname=strrep(vidfname, '.txt', '.avi');
     v=VideoWriter(vidfname);
@@ -254,8 +257,9 @@ if(1)
     subplot(313)
     h3=plot(azimuth3(1), 'bo');
     
-    
+    wb=waitbar(0, 'building animation');
     for f=1:length(smouseCOMx)
+        waitbar(f/length(smouseCOMx), wb);
         axes(ax)
         %subplot(311) %figure(ftracks)
         hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
@@ -279,6 +283,7 @@ if(1)
         writeVideo(v,frame);
     end
     close(v)
+    close(wb)
 end
 
 %range (distance to target)
