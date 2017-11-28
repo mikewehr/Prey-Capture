@@ -2,7 +2,7 @@ function AnalyzeBonsaiTrackingData(datapath, start_frame, stop_frame)
 close all
 
 if nargin==0
-    datapath=    'C:\Users\lab\Desktop\826 mice bonsai\cage5\RT\10-27';
+    datapath=    'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder';
     start_frame=1;
     stop_frame=[];
     
@@ -18,7 +18,7 @@ end
 %filename='data2017-07-27T14_36_50.txt';
 %filename='data2017-07-27T15_58_42.txt';
 
-%filename='data2017-10-11T12_03_04.txt';
+% filename='data2017-10-11T12_03_04.txt';
 %filename='data2017-10-27T13_07_35.txt';
 
 out=LoadBonsaiTracks(datapath);
@@ -134,17 +134,16 @@ scrickety=filtfilt(b,a,clean2_cricketxy(:,2));
 % scricketx=conv(cricketxy(:,1), g, 'same');
 % scrickety=conv(cricketxy(:,2), g, 'same');
 
-ftracks=figure('position', [418        1384         788        1069]);
+ftracks=figure('position', [418        1         788        1069]);
 %subplot(311)
            ax= axes('pos', [0.1300    0.7093    0.52    0.22]);
 hold on
 plot(smouseCOMx, smouseCOMy, smouseNosex, smouseNosey, scricketx, scrickety)
 title('mouse & cricket positions, smoothed')
-legend('mouse COM', 'mouse nose', 'cricket', 'Location', 'EastOutside')
 set(gca, 'ydir', 'reverse')
 
-%animate the mouse and cricket
-% if(0)
+% animate the mouse and cricket
+% if(1)
 %     h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
 %     for f=1:length(smouseCOMx)
 %         hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
@@ -204,12 +203,12 @@ subplot(312)
 hold on
 plot(cricket_angle_com_unwrapped)
 plot(cricket_angle_nose_unwrapped)
-plot(mouse_bearing_unwrapped)
+plot(mouse_bearing_unwrapped, 'k')
 title('unwrapped absolute angles')
-legend('mouse COM to cricket', 'mouse nose to cricket', 'mouse bearing')
+% legend('mouse COM to cricket', 'mouse nose to cricket', 'mouse bearing')
 
-%animate the mouse and cricket
-% if(0)
+% animate the mouse and cricket
+% if(1)
 %     h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
 %     for f=1:length(smouseCOMx)
 %         hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
@@ -245,19 +244,22 @@ if exist('analysis_plots.ps')==2
 else
     print -dpsc2 'analysis_plots.ps' -bestfit
 end
+line(xlim, [0 0], 'linestyle', '--')
 
 %animate the mouse and cricket, along with angles, write to video
 if 1
-    vidfname=strrep(filename, 'data', 'analysis');
-    vidfname=strrep(vidfname, '.txt', '.avi');
+    [p, f, e]=fileparts(datapath);
+
+    vidfname=sprintf('%s.avi', f);
     v=VideoWriter(vidfname);
     open(v);
     figure(ftracks)
     axes(ax) %     subplot(311)
-    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
+    h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro',scricketx(1), scrickety(1), 'ko');
+legend('mouse COM', 'mouse nose', 'cricket','mouse COM', 'mouse nose', 'cricket', 'Location', 'EastOutside')
     %     figure(fangles)
     subplot(312)
-    h2=plot(1,cricket_angle_nose_unwrapped(1), 'bo', 1, mouse_bearing_unwrapped(1), 'ro');
+    h2=plot(1,cricket_angle_nose_unwrapped(1), 'ko', 1, mouse_bearing_unwrapped(1), 'ro');
     %     figure(fazimuth)
     subplot(313)
     h3=plot(azimuth3(1), 'bo');
@@ -267,14 +269,18 @@ if 1
         waitbar(f/length(smouseCOMx), wb);
         axes(ax)
         %subplot(311) %figure(ftracks)
-        hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
-            smouseNosex(f), smouseNosey(f), 'ro', ...
-            scricketx(f), scrickety(f), 'ko');
-        set(h, 'visible', 'off');
-        h=hnew;
+%         hnew=plot(smouseCOMx(f), smouseCOMy(f), 'bo', ...
+%             smouseNosex(f), smouseNosey(f), 'ro', ...
+%             scricketx(f), scrickety(f), 'ko');
+%         set(h, 'visible', 'off');
+%         h=hnew;
+        set(h(1), 'xdata', smouseCOMx(f), 'ydata', smouseCOMy(f))
+        set(h(2), 'xdata', smouseNosex(f), 'ydata', smouseNosey(f))
+        set(h(3), 'xdata', scricketx(f), 'ydata', scrickety(f))
+        
         
         subplot(312) %figure(fangles)
-        hnew2=plot(f, cricket_angle_nose_unwrapped(f), 'bo', f, mouse_bearing_unwrapped(f), 'ro');
+        hnew2=plot(f, cricket_angle_nose_unwrapped(f), 'ko', f, mouse_bearing_unwrapped(f), 'ro');
         set(h2, 'visible', 'off');
         h2=hnew2;
         
@@ -319,6 +325,7 @@ hold on
 numframes=length(speed);
 cmap=colormap;
 for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
+cmap2(find(cmap2>1))=1;
 for f=1:numframes
     plot(speed(f), range(1+f), '.', 'color', cmap2(f,:))
 end

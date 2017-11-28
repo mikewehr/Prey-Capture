@@ -4,7 +4,7 @@ function out = LoadBonsaiTracks(datapath)
 %cd(datapath)
 %check for outfile and load if present
 [p, f, e]=fileparts(datapath);
-cd(p)
+ cd(p)
 outfilename=sprintf('%s.mat', f);
 txtfilename=sprintf('%s.txt', f);
 if exist(outfilename, 'file')
