@@ -57,7 +57,7 @@ legend('mouse COM', 'mouse nose', 'cricket')
 
 
 
-% clean up cricket tracks (in 2D)
+% clean up cricket tracks (in 2 steps)
 dfc1=diff(cricketxy);
 thresh=10; %plausible cricket jump threshold
 errframes1=find(abs(dfc1)>thresh);
