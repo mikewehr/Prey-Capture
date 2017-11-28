@@ -136,9 +136,12 @@ scrickety=filtfilt(b,a,clean2_cricketxy(:,2));
 
 ftracks=figure('position', [418        1         788        1069]);
 %subplot(311)
-           ax= axes('pos', [0.1300    0.7093    0.52    0.22]);
+ax= axes('pos', [0.1300    0.7093    0.52    0.22]);
 hold on
 plot(smouseCOMx, smouseCOMy, smouseNosex, smouseNosey, scricketx, scrickety)
+text(smouseCOMx(1), smouseCOMy(1), 'start')
+text(scricketx(1), scrickety(1), 'start')
+xlim([300 1600 0 1200])
 title('mouse & cricket positions, smoothed')
 set(gca, 'ydir', 'reverse')
 
@@ -247,7 +250,7 @@ end
 line(xlim, [0 0], 'linestyle', '--')
 
 %animate the mouse and cricket, along with angles, write to video
-if 1
+if 0
     [p, f, e]=fileparts(datapath);
 
     vidfname=sprintf('%s.avi', f);
@@ -311,10 +314,21 @@ xlabel('time, s')
 ylabel('speed, px/s')
 title('mouse speed vs. time')
 
+%cricket speed
+cspeed=sqrt(diff(scricketx).^2 + diff(scrickety).^2);
+[b,a]=butter(1, .01);
+cspeed=filtfilt(b,a,cspeed);
 figure
-title('range, azimuth, and speed over time (mismatched units')
-plot(tspeed, 100*speed, t, range, t, azimuth3) %weird because they are different units 
-legend('speed', 'range', 'azimuth')
+plot(tspeed, cspeed)
+xlabel('time, s')
+ylabel('speed, px/s')
+title('cricket speed vs. time')
+
+figure
+% title('range, azimuth, and speed over time (mismatched units')
+title(datapath)
+plot(tspeed, 100*speed, tspeed, 100*cspeed, t, range, t, azimuth3) %weird because they are different units 
+legend('mouse speed', 'cricket speed', 'range', 'azimuth')
 xlabel('time, s')
 ylabel('speed, px/s')
 print -dpsc2 'analysis_plots.ps' -append
@@ -337,7 +351,17 @@ title('range vs. speed')
 print -dpsc2 'analysis_plots.ps' -append
 
 figure
-plot(range, azimuth, '.')
+plot(range, azimuth, 'k')
+hold on
+cmap=colormap;
+for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
+for f=1:numframes
+    plot(range(f), azimuth(1+f), '.', 'color', cmap2(f,:))
+end
+text(range(1), azimuth(2), 'start')
+text(range(end), azimuth(end), 'end')
+xl=xlim;yl=ylim;
+xlim([0 xl(2)]);
 xlabel('range, pixels')
 ylabel('azimuth, degrees')
 title('azimuth vs. range')
