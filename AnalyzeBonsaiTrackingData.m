@@ -139,6 +139,8 @@ ftracks=figure('position', [418        1384         788        1069]);
            ax= axes('pos', [0.1300    0.7093    0.52    0.22]);
 hold on
 plot(smouseCOMx, smouseCOMy, smouseNosex, smouseNosey, scricketx, scrickety)
+text(smouseCOMx(1), smouseCOMy(1), 'start')
+text(scricketx(1), scrickety(1), 'start')
 title('mouse & cricket positions, smoothed')
 legend('mouse COM', 'mouse nose', 'cricket', 'Location', 'EastOutside')
 set(gca, 'ydir', 'reverse')
@@ -306,7 +308,8 @@ ylabel('speed, px/s')
 title('mouse speed vs. time')
 
 figure
-title('range, azimuth, and speed over time (mismatched units')
+% title('range, azimuth, and speed over time (mismatched units')
+title(datapath)
 plot(tspeed, 100*speed, t, range, t, azimuth3) %weird because they are different units 
 legend('speed', 'range', 'azimuth')
 xlabel('time, s')
@@ -324,13 +327,26 @@ for f=1:numframes
 end
 text(speed(1), range(2), 'start')
 text(speed(end), range(end), 'end')
-    xlabel('speed')
+xlabel('speed')
 ylabel('range')
+xl=xlim;yl=ylim;
+xlim([0 xl(2)]);
+ylim([0 yl(2)]);
 title('range vs. speed')
 print -dpsc2 'analysis_plots.ps' -append
 
 figure
-plot(range, azimuth, '.')
+plot(range, azimuth, 'k')
+hold on
+cmap=colormap;
+for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
+for f=1:numframes
+    plot(range(f), azimuth(1+f), '.', 'color', cmap2(f,:))
+end
+text(range(1), azimuth(2), 'start')
+text(range(end), azimuth(end), 'end')
+xl=xlim;yl=ylim;
+xlim([0 xl(2)]);
 xlabel('range, pixels')
 ylabel('azimuth, degrees')
 title('azimuth vs. range')
