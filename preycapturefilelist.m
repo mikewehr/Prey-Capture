@@ -2,53 +2,53 @@ function files=preycapturefilelist
 
 i=0;
 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_53_49.txt';
-% files(i).start_frame=1;
-% files(i).stop_frame=[180]; %use [] to use entire video
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_51_24.txt';
-% files(i).start_frame=15;
-% files(i).stop_frame=[870]; %use [] to use entire video
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_55_32.txt ';
-% files(i).start_frame=15;
-% files(i).stop_frame=[480]; %use [] to use entire video
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_57_22.txt';
-% files(i).start_frame=30;
-% files(i).stop_frame=[330]; %use [] to use entire video
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_01_15.txt ';
-% files(i).start_frame=30;
-% files(i).stop_frame=[360]; %use [] to use entire video
-% 
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_04_41.txt';
-% files(i).start_frame=30;
-% files(i).stop_frame=[210]; %use [] to use entire video
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_07_00.txt';
-% files(i).start_frame=30;
-% files(i).stop_frame=[1740]; %use [] to use entire video
-% 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_10_40.txt';
-% files(i).start_frame=30;
-% files(i).stop_frame=[1710]; %use [] to use entire video
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_53_49.txt';
+files(i).start_frame=1;
+files(i).stop_frame=[180]; %use [] to use entire video
 
-%%%
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_51_24.txt';
+files(i).start_frame=15;
+files(i).stop_frame=[870]; %use [] to use entire video
 
-% i=i+1;
-% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_15_10.txt';
-% files(i).start_frame=30;
-% files(i).stop_frame=[330]; %use [] to use entire video
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_55_32.txt ';
+files(i).start_frame=15;
+files(i).stop_frame=[480]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T13_57_22.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[330]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_01_15.txt ';
+files(i).start_frame=30;
+files(i).stop_frame=[360]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_04_41.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[210]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_07_00.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[1740]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_10_40.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[1710]; %use [] to use entire video
+
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-13T14_15_10.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[330]; %use [] to use entire video
 i=i+1;
 files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-27T13_42_18.txt';
 files(i).start_frame=30;

@@ -8,6 +8,9 @@ if nargin==0
     
 end
     
+analysis_plots_dir= 'C:\Users\lab\Desktop\826 mice bonsai';
+%target directory for appended plotting output file
+
 %adjust filenames to work on a mac
   if ismac
     datapath= strrep(datapath, '\', '/');
@@ -120,7 +123,7 @@ set(gca, 'ydir', 'reverse')
 
 %smooth
 % 
-[b,a]=butter(1, .25);
+[b,a]=butter(3, .25);
 smouseCOMx=filtfilt(b,a,mouseCOMxy(:,1));
 smouseCOMy=filtfilt(b,a,mouseCOMxy(:,2));
 smouseNosex=filtfilt(b,a,mouseNosexy(:,1));
@@ -141,7 +144,7 @@ hold on
 plot(smouseCOMx, smouseCOMy, smouseNosex, smouseNosey, scricketx, scrickety)
 text(smouseCOMx(1), smouseCOMy(1), 'start')
 text(scricketx(1), scrickety(1), 'start')
-xlim([300 1600 0 1200])
+axis([300 1600 0 1200])
 title('mouse & cricket positions, smoothed')
 set(gca, 'ydir', 'reverse')
 
@@ -242,6 +245,7 @@ plot(azimuth3)
 xlabel('frames')
 ylabel('azimuth in degrees')
 title(' azimuth (nose-to-cricket, unwrapped)')
+cd(analysis_plots_dir)
 if exist('analysis_plots.ps')==2
     print -dpsc2 'analysis_plots.ps' -append -bestfit
 else
@@ -305,7 +309,7 @@ range=sqrt(deltax_cnose.^2 + deltay_cnose.^2);
 
 %mouse speed
 speed=sqrt(diff(smouseCOMx).^2 + diff(smouseCOMx).^2);
-[b,a]=butter(1, .01);
+[b,a]=butter(3, .5);
 speed=filtfilt(b,a,speed);
 tspeed=t(2:end);
 figure
@@ -316,7 +320,7 @@ title('mouse speed vs. time')
 
 %cricket speed
 cspeed=sqrt(diff(scricketx).^2 + diff(scrickety).^2);
-[b,a]=butter(1, .01);
+[b,a]=butter(3, .5);
 cspeed=filtfilt(b,a,cspeed);
 figure
 plot(tspeed, cspeed)
@@ -326,11 +330,14 @@ title('cricket speed vs. time')
 
 figure
 % title('range, azimuth, and speed over time (mismatched units')
-title(datapath)
-plot(tspeed, 100*speed, tspeed, 100*cspeed, t, range, t, azimuth3) %weird because they are different units 
+plot(tspeed, 10*speed, tspeed, 10*cspeed, t, range, t, azimuth3) %weird because they are different units 
 legend('mouse speed', 'cricket speed', 'range', 'azimuth')
 xlabel('time, s')
 ylabel('speed, px/s')
+grid on
+line(xlim, [0 0], 'color', 'k')
+th=title(datapath);
+set(th,'fontsize', 8)
 print -dpsc2 'analysis_plots.ps' -append
 
 figure
@@ -351,12 +358,15 @@ title('range vs. speed')
 print -dpsc2 'analysis_plots.ps' -append
 
 figure
-plot(range, azimuth, 'k')
+h=plot(range, azimuth);
+set(h, 'color', [.7 .7 .7]) %grey
 hold on
 cmap=colormap;
 for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
+cmap2(find(cmap2>1))=1;
 for f=1:numframes
-    plot(range(f), azimuth(1+f), '.', 'color', cmap2(f,:))
+    h=plot(range(f), azimuth(1+f), '.', 'color', cmap2(f,:));
+    set(h, 'markersize', 20)
 end
 text(range(1), azimuth(2), 'start')
 text(range(end), azimuth(end), 'end')
