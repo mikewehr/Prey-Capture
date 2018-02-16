@@ -240,28 +240,44 @@ title('unwrapped absolute angles')
 %     end
 % end
 
+%calculating Relative Azimuth instead of using absolute angles
+% %solve the triangle using the cosine rule
+% a=COM-to-nose distance
+% b=COM-to-cricket
+% c=nose-to-cricket
+% then azimuth=arccos((a2 + b2 - c2)/(2ab))
+a=sqrt((smouseCOMx-smouseNosex).^2 + (smouseCOMy-smouseNosey).^2);
+b=sqrt((smouseCOMx-scricketx).^2 + (smouseCOMy-scrickety).^2);
+c=sqrt((smouseNosex-scricketx).^2 + (smouseNosey-scrickety).^2);
+RelativeAzimuth=acosd((a.^2+b.^2-c.^2)./(2.*a.*b));
+
+
 figure;
 plot(azimuth1)
 hold on
 plot(azimuth2)
 plot(azimuth3)
 plot(azimuth4)
+plot(RelativeAzimuth)
 xlabel('frames')
 ylabel('azimuth in degrees')
-title('comparison of 2 azimuth computations')
-legend('azimuth (COM-to-cricket)', 'azimuth (nose-to-cricket)', 'unwrapped (COM-to-cricket)', 'unwrapped (nose-to-cricket)')
+title('comparison of azimuth computations')
+legend('azimuth (COM-to-cricket)', 'azimuth (nose-to-cricket)', 'unwrapped (COM-to-cricket)', 'unwrapped (nose-to-cricket)', 'RelativeAzimuth')
 
-%azimuth3 is the best, so we keep that one and rename it azimut
+%azimuth3 is the best, so we keep that one and rename it azimuth
 azimuth=azimuth3;
+
+
+
 
 % fazimuth=figure;
 figure(ftracks)
 subplot(313)
 hold on
-plot(azimuth)
+plot(RelativeAzimuth)
 xlabel('frames')
 ylabel('azimuth in degrees')
-title(' azimuth (nose-to-cricket, unwrapped)')
+title(' azimuth')
 cd(analysis_plots_dir)
 if exist('analysis_plots.ps')==2
     print -dpsc2 'analysis_plots.ps' -append -bestfit
@@ -347,7 +363,7 @@ title('cricket speed vs. time')
 
 figure
 % title('range, azimuth, and speed over time (mismatched units')
-plot(tspeed, 10*speed, tspeed, 10*cspeed, t, range, t, azimuth) %weird because they are different units 
+plot(tspeed, 10*speed, tspeed, 10*cspeed, t, range, t, RelativeAzimuth) %weird because they are different units 
 legend('mouse speed', 'cricket speed', 'range', 'azimuth')
 xlabel('time, s')
 ylabel('speed, px/s')
@@ -355,7 +371,9 @@ grid on
 line(xlim, [0 0], 'color', 'k')
 th=title(datapath);
 set(th,'fontsize', 8)
-print -dpsc2 'analysis_plots.ps' -append
+try
+    print -dpsc2 'analysis_plots.ps' -append
+end
 
 figure
 plot(speed, range(2:end), 'k')
@@ -375,18 +393,18 @@ title('range vs. speed')
 print -dpsc2 'analysis_plots.ps' -append
 
 figure
-h=plot(range, azimuth);
+h=plot(range, RelativeAzimuth);
 set(h, 'color', [.7 .7 .7]) %grey
 hold on
 cmap=colormap;
 for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
 cmap2(find(cmap2>1))=1;
 for f=1:numframes
-    h=plot(range(f), azimuth(1+f), '.', 'color', cmap2(f,:));
+    h=plot(range(f), RelativeAzimuth(f), '.', 'color', cmap2(f,:));
     set(h, 'markersize', 20)
 end
-text(range(1), azimuth(2), 'start')
-text(range(end), azimuth(end), 'end')
+text(range(1), RelativeAzimuth(2), 'start')
+text(range(end), RelativeAzimuth(end), 'end')
 xl=xlim;yl=ylim;
 xlim([0 xl(2)]);
 xlabel('range, pixels')
@@ -445,7 +463,7 @@ groupdata(i).lag=lag; %time vector for xcorrs
 groupdata(i).xc1=xc1; %xcorr of cricket speed -> mouse speed
 groupdata(i).xc2=xc2; %xcorr of cricket speed -> range
 groupdata(i).xc3=xc3; %xcorr of mouse speed -> range
-groupdata(i).azimuth=azimuth;
+groupdata(i).azimuth=RelativeAzimuth;
 groupdata(i).t=t; %time vector for distances, in seconds
 groupdata(i).tspeed=tspeed; %%time vector for speeds, in seconds (=1 sample shorter than t)
 groupdata(i).framerate=framerate;
