@@ -40,6 +40,19 @@ Range=[];
 Speed=[];
 Azimuth=[];
 T=[];
+Numframes=[];
+
+for i=1:length(groupdata)
+    Numframes(i)=groupdata(i).numframes;
+end
+maxnumframes=max(Numframes);
+
+%matrices to hold range etc. on each trial
+RangeM=nan*ones(numfiles, maxnumframes);
+SpeedM=RangeM;
+CSpeedM=RangeM;
+AzimuthM=RangeM;
+
 framerate=groupdata(1).framerate;
 
 for i=1:length(groupdata)
@@ -61,9 +74,15 @@ for i=1:length(groupdata)
     Azimuth=[Azimuth; azimuth(1:end-1)];
     numframes=groupdata(i).numframes;
     
+    RangeM(i,maxnumframes-numframes:maxnumframes)=range;
+    SpeedM(i,maxnumframes-numframes+1:maxnumframes)=speed;
+    CSpeedM(i,maxnumframes-numframes+1:maxnumframes)=cspeed;
+    AzimuthM(i,maxnumframes-numframes:maxnumframes)=azimuth;
+
+    
     %recompute xcorr but thresholding for cricket speed
     maxlag=1*framerate;
-    thresh=20;
+    thresh=100;
     cspeed_th=nan(size(cspeed));
     x=find(cspeed>thresh);
     cspeed_th(x)=cspeed(x);
@@ -79,9 +98,23 @@ for i=1:length(groupdata)
     end
     cspeed_th(isnan(cspeed_th))=0; %this artificially sets speed to zero more than 1s from where cricket is below thresh
     
+    %in order to compute xcorr of cricket speed -> mouse speed, conditioned
+    %on whether the range is below some threshold, prepare cricket and
+    %mouse speed conditioned on range below threshold
+    cspeed_rth=nan(size(cspeed)); %rth = "range theshold"
+    mspeed_rth=nan(size(cspeed));
+    rthresh=50;
+    x=find(range<rthresh);
+    x=x(x<=length(cspeed_rth)); %trim to size of speed vector 
+    cspeed_rth(x)=cspeed(x);
+    mspeed_rth(x)=speed(x);
+    mspeed_rth(isnan(mspeed_rth))=0; %this artificially sets speed to zero wherever range is above thresh (xcorr cannot accept nans)
+    cspeed_rth(isnan(cspeed_rth))=0; %this artificially sets speed to zero wherever range is above thresh (xcorr cannot accept nans)
+
     
     [xc1, lag]=xcorr(speed, cspeed, maxlag, 'unbiased');%unbiased
     [xc1_th, lag]=xcorr(speed, cspeed_th, maxlag, 'unbiased');%unbiased
+    [xc1_rth, lag]=xcorr(mspeed_rth, cspeed_rth, maxlag, 'unbiased');%unbiased
     [xc2, lag]=xcorr(range, cspeed, maxlag);%unbiased
     [xc2_th, lag]=xcorr(range, cspeed_th, maxlag);%unbiased
     [xc3, lag]=xcorr(range, speed, maxlag);%unbiased
@@ -89,6 +122,8 @@ for i=1:length(groupdata)
     xc1=xc1./max(abs(xc1));
     xc1_th=xc1_th- mean(xc1_th);
     xc1_th=xc1_th./max(abs(xc1_th));
+    xc1_rth=xc1_rth- mean(xc1_rth);
+    xc1_rth=xc1_rth./max(abs(xc1_rth));
     xc2=xc2- mean(xc2);
     xc2=xc2./max(abs(xc2));
     xc2_th=xc2_th- mean(xc2_th);
@@ -99,6 +134,7 @@ for i=1:length(groupdata)
     XC1(i,:)=xc1;
     XC2(i,:)=xc2;
     XC1_th(i,:)=xc1_th;
+    XC1_rth(i,:)=xc1_rth;
     XC2_th(i,:)=xc2_th;
     XC3(i,:)=xc3;
     
@@ -110,14 +146,18 @@ figure;hold on
 semxc1=std(XC1)./sqrt(numfiles);
 semxc2=std(XC2)./sqrt(numfiles);
 semxc1_th=nanstd(XC1_th)./sqrt(numfiles);
+semxc1_rth=nanstd(XC1_rth)./sqrt(numfiles);
 semxc2_th=nanstd(XC2_th)./sqrt(numfiles);
 semxc3=std(XC3)./sqrt(numfiles);
 
-plot(0,0, 'b', 0,0, 'b', 0,0, 'r',0,0, 'm', 0,0, 'g') %dummy for legend
-legend('cricket speed -> mouse speed','cricket speed th -> mouse speed','cricket speed -> range','cricket speed th -> range','mouse speed -> range', ...
+plot(0,0, 'b', 0,0, 'c', 0,0, 'k',0,0, 'r',0,0, 'm', 0,0, 'g') %dummy for legend
+legend('cricket speed -> mouse speed','cricket speed th -> mouse speed',...
+    'cricket speed (range th) -> mouse speed (range th)',...
+    'cricket speed -> range','cricket speed th -> range','mouse speed -> range', ...
     'location', 'NorthWest')
 shadedErrorBar(lag, mean(XC1), semxc1, 'b', 1);
-shadedErrorBar(lag, nanmean(XC1_th), semxc1_th, 'b', 1);
+shadedErrorBar(lag, nanmean(XC1_th), semxc1_th, 'c', 1);
+shadedErrorBar(lag, nanmean(XC1_rth), semxc1_rth, 'k', 1);
 shadedErrorBar(lag, mean(XC2), semxc2, 'r', 1);
 shadedErrorBar(lag, nanmean(XC2_th), semxc2_th, 'm', 1);
 shadedErrorBar(lag, mean(XC3), semxc3, 'g', 1);
@@ -128,8 +168,8 @@ xlabel('time lag, ms')
 
 %2-D histogram of azimuth vs range
 %histogram azimuth -360-3600 degrees in 60 bins, and ranges 0-1200 px in 60 bins
-Azimuthedges=linspace(-360, 360, 60);
-Rangeedges=linspace(0, 1200, 60);
+Azimuthedges=linspace(0, 180, 20);
+Rangeedges=linspace(0, 1200, 20);
 
 histmat=hist2(Azimuth, Range, Azimuthedges, Rangeedges);
 figure;
@@ -143,8 +183,8 @@ title(sprintf('Azimuth vs. Range, n=%d', numfiles))
 
 % 2-D histogram of range vs speed
 %histogram speeds 0-40 px/s  in 30 bins, and ranges 0-1200 px in 60 bins
-Speededges=linspace(0, 40, 30);
-Rangeedges=linspace(0, 1200, 60);
+Speededges=linspace(0, 40, 20);
+Rangeedges=linspace(0, 1200, 30);
 
 histmat=hist2(Speed, Range, Speededges, Rangeedges);
 figure;
@@ -166,8 +206,21 @@ hold on
 offset=0;
 for i=1:numfiles
     plot(lag, XC1_th(i,:)+offset, 'k')
-offset=offset+10;
+offset=offset+.1;
 end
-    
 grid on
 
+
+% looks flat, presumably because without a threshold, most of the time the cricket is holding still
+% figure
+% hold on
+% offset=0;
+% for i=1:numfiles
+%     plot(lag, XC1(i,:)+offset, 'k')
+% offset=offset+10;
+% end
+% grid on
+
+%how about a 2-d histogram of range over time, aligned to capture
+% or for that matter a population average range vs time, aligned to capture
+% and azimuth, speed, etc. as well

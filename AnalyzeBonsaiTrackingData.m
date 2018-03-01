@@ -378,7 +378,10 @@ end
 figure
 plot(speed, range(2:end), 'k')
 hold on
-numframes=length(speed);
+%numframes=length(speed);
+numframes=length(smouseCOMx);
+
+
 cmap=colormap;
 for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
 cmap2(find(cmap2>1))=1;

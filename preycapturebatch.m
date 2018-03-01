@@ -8,7 +8,8 @@ if ismac
 end
 cd(analysis_plots_dir)
 delete analysis_plots.ps
-       fprintf('\nAnalyzing %d files...', length(files))
+delete preycapture_groupdata.mat
+fprintf('\nAnalyzing %d files...', length(files))
 
 for i=1:length(files)
    AnalyzeBonsaiTrackingData( files(i).datapath, files(i).start_frame, files(i).stop_frame)
