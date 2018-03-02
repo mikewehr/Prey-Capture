@@ -57,7 +57,7 @@ framerate=groupdata(1).framerate;
 
 for i=1:length(groupdata)
     if ~mod(i,10)
-        fprintf('\nfile %d/%d', i, length(files))
+        fprintf('\nfile %d/%d', i, numfiles)
     end
     %     xc1=groupdata(i).xc1; %xcorr of cricket speed -> mouse speed
     %     xc2=groupdata(i).xc2; %xcorr of cricket speed -> range
@@ -74,10 +74,10 @@ for i=1:length(groupdata)
     Azimuth=[Azimuth; azimuth(1:end-1)];
     numframes=groupdata(i).numframes;
     
-    RangeM(i,maxnumframes-numframes:maxnumframes)=range;
-    SpeedM(i,maxnumframes-numframes+1:maxnumframes)=speed;
-    CSpeedM(i,maxnumframes-numframes+1:maxnumframes)=cspeed;
-    AzimuthM(i,maxnumframes-numframes:maxnumframes)=azimuth;
+    RangeM(i,maxnumframes-numframes+1:maxnumframes)=range;
+    SpeedM(i,maxnumframes-numframes+2:maxnumframes)=speed;
+    CSpeedM(i,maxnumframes-numframes+2:maxnumframes)=cspeed;
+    AzimuthM(i,maxnumframes-numframes+1:maxnumframes)=azimuth;
 
     
     %recompute xcorr but thresholding for cricket speed
@@ -93,7 +93,7 @@ for i=1:length(groupdata)
         start=y-win*framerate;
         if start<1 start=1;end
         stop=y+win*framerate;
-        if stop>=numframes stop=numframes;end
+        if stop>=numframes-1 stop=numframes-1;end
         cspeed_th(start:stop)= cspeed(start:stop);
     end
     cspeed_th(isnan(cspeed_th))=0; %this artificially sets speed to zero more than 1s from where cricket is below thresh
@@ -222,5 +222,28 @@ grid on
 % grid on
 
 %how about a 2-d histogram of range over time, aligned to capture
+
 % or for that matter a population average range vs time, aligned to capture
 % and azimuth, speed, etc. as well
+figure
+F=-size(RangeM,2)+1:1:0;
+t=F/framerate;
+shadedErrorBar(t, nanmean(RangeM), nanstd(RangeM), 'b', 1);
+xlim([-20 0])
+xlabel('time to capture, s')
+ylabel('range, pixels')
+
+figure
+shadedErrorBar(t, nanmean(AzimuthM), nanstd(AzimuthM), 'b', 1);
+xlim([-20 0])
+xlabel('time to capture, s')
+ylabel('Azimuth, degrees')
+
+figure
+hold on
+shadedErrorBar(t, nanmean(SpeedM), nanstd(SpeedM), 'b', 1);
+shadedErrorBar(t, nanmean(CSpeedM), nanstd(CSpeedM), 'r', 1);
+xlim([-20 0])
+xlabel('time to capture, s')
+ylabel('speed, pixels/sec')
+
