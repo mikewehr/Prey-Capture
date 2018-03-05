@@ -385,7 +385,7 @@ numframes=length(smouseCOMx);
 cmap=colormap;
 for j=1:3; cmap2(:,j)=interp(cmap(:,j), ceil(numframes/64));end
 cmap2(find(cmap2>1))=1;
-for f=1:numframes
+for f=1:numframes-1
     plot(speed(f), range(1+f), '.', 'color', cmap2(f,:))
 end
 text(speed(1), range(2), 'start')
