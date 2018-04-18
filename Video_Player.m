@@ -32,7 +32,7 @@ function varargout = Video_Player(varargin)
 
 % Edit the above text to modify the response to help Video_Player
 
-% Last Modified by GUIDE v2.5 17-Apr-2018 15:13:05
+% Last Modified by GUIDE v2.5 17-Apr-2018 17:46:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -100,6 +100,7 @@ if(video_file_path == 0)
 end
 input_video_file = [video_file_path,video_file_name];
 set(handles.edit1,'String',input_video_file);
+handles.video_file_path=video_file_path;
 % Acquiring video
 videoObject = VideoReader(input_video_file);
 % Display first frame
@@ -147,36 +148,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-% ************************ START ******************************************
-% --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% videoObject = handles.videoObject;
-% set(handles.pushbutton3,'Enable','on');
-% set(handles.pushbutton2,'Enable','off');
-% axes(handles.axes1);
-% Running=handles.Running;
-% 
-% % for frameCount = 2:videoObject.NumberOfFrames
-% while Running    % Display frames
-%     handles = guidata(hObject);
-%     frameCount=handles.frameCount;
-%     set(handles.text3,'String',num2str(frameCount));
-%     frame = read(videoObject,frameCount);
-%     imshow(frame);
-%     frameCount=frameCount+1;
-%     handles.frameCount=frameCount;
-%     drawnow;
-%     guidata(hObject,handles);
-%     Running=handles.Running
-% end
-% 
-% %end
-% set(handles.pushbutton4,'Enable','on');
-% set(handles.pushbutton3,'Enable','off');
 
 
 
@@ -269,3 +240,23 @@ axes(handles.axes1);
     drawnow;
     handles.frameCount=frameCount;
 guidata(hObject,handles);
+
+
+% --- Executes on button press in Check_cricket_speed.
+function Check_cricket_speed_Callback(hObject, eventdata, handles)
+% hObject    handle to Check_cricket_speed (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+input_video_file=get(handles.edit1,'String');
+datafile=strrep(input_video_file, 'raw', 'data');
+out=LoadBonsaiTracks(datafile);
+cricketxy=out.cricketxy;
+cricketxy=cricketxy(start_frame:stop_frame,:);
+cspeed=sqrt(diff(cricketxy(:,1)).^2 + diff(scricketxy(:,2)).^2);
+figure
+plot(cspeed)
+xlabel('frames')
+ylabel('cricket speed, px/s')
+title('cricket speed')
+
