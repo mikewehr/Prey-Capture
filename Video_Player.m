@@ -32,7 +32,7 @@ function varargout = Video_Player(varargin)
 
 % Edit the above text to modify the response to help Video_Player
 
-% Last Modified by GUIDE v2.5 17-Apr-2018 17:46:31
+% Last Modified by GUIDE v2.5 17-Apr-2018 18:42:19
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -177,6 +177,7 @@ else
     Running=1;
     while Running
         frameCount=handles.frameCount;
+        if videoObject.CurrentTime < videoObject.Duration
         frameCount=frameCount+1;
         set(handles.text3,'String',num2str(frameCount));
         frame = read(videoObject,frameCount);
@@ -191,7 +192,11 @@ else
         if(strcmp(get(handles.pushbutton3,'String'),'Play'))
             Running=0;
         end
+        else
+            Running=0;
+            set(handles.pushbutton3,'String','Play');
     end
+end
 end
 
 % ************************ EXIT *******************************************
@@ -251,14 +256,65 @@ function Check_cricket_speed_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 input_video_file=get(handles.edit1,'String');
-datafile=strrep(input_video_file, 'raw', 'data');
+if strfind(input_video_file, 'raw')
+    datafile=strrep(input_video_file, 'raw', 'data');
+elseif  strfind(input_video_file, 'MT')
+    datafile=strrep(input_video_file, 'MT', 'data');
+else error('data file not found')
+end
 out=LoadBonsaiTracks(datafile);
 cricketxy=out.cricketxy;
-cricketxy=cricketxy(start_frame:stop_frame,:);
-cspeed=sqrt(diff(cricketxy(:,1)).^2 + diff(scricketxy(:,2)).^2);
+%cricketxy=cricketxy(start_frame:stop_frame,:);
+cspeed=sqrt(diff(cricketxy(:,1)).^2 + diff(cricketxy(:,2)).^2);
 figure
 plot(cspeed)
 xlabel('frames')
 ylabel('cricket speed, px/s')
 title('cricket speed')
 
+
+
+% --- Executes on button press in ReversePlay.
+function ReversePlay_Callback(hObject, eventdata, handles)
+% hObject    handle to ReversePlay (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles = guidata(hObject);
+videoObject = handles.videoObject;
+axes(handles.axes1);
+Running=handles.Running;
+
+if(strcmp(get(handles.ReversePlay,'String'),'Pause'))
+    set(handles.ReversePlay,'String','Reverse Play');
+    %    uiwait();
+    Running=0;
+    handles.Running=0;
+    guidata(hObject,handles);
+else
+    set(handles.ReversePlay,'String','Pause');
+    %uiresume();
+    %play
+    Running=1;
+    while Running
+        frameCount=handles.frameCount;
+        frameCount=frameCount-1;
+        if frameCount>1
+            set(handles.text3,'String',num2str(frameCount));
+            frame = read(videoObject,frameCount);
+            imshow(frame);
+            handles.frameCount=frameCount;
+            drawnow;
+            guidata(hObject,handles);
+            %handles = guidata(hObject);
+            %fprintf('\n%s', get(handles.pushbutton3,'String'))
+            %guidata(hObject,handles);
+            %pushbutton2_Callback(hObject, eventdata, handles)
+            if(strcmp(get(handles.ReversePlay,'String'),'Reverse Play'))
+                Running=0;
+            end
+        else
+            Running=0;
+            set(handles.ReversePlay,'String','Reverse Play');
+        end
+    end
+end
