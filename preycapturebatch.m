@@ -1,7 +1,7 @@
 %batch process prey capture files
 
-files=preycapturefilelist;
-analysis_plots_dir= 'C:\Users\lab\Desktop\826 mice bonsai';
+files=leglesscricketsfilelist;
+analysis_plots_dir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
 if ismac    
     analysis_plots_dir= strrep(analysis_plots_dir, '\', '/');
     analysis_plots_dir= strrep(analysis_plots_dir, 'C:', '/Volumes/C');

@@ -3,13 +3,13 @@ close all
 
 if nargin==0
     fprintf('\n\n no input\n\n')
-    datapath=    'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder';
+    datapath=    'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
     start_frame=1;
     stop_frame=[];
     
 end
     
-analysis_plots_dir= 'C:\Users\lab\Desktop\826 mice bonsai';
+analysis_plots_dir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
 %target directory for appended plotting output file
 groupdatadir = analysis_plots_dir; %where to accumulate groupdata file
 groupdatafilename='preycapture_groupdata.mat';

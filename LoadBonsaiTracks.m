@@ -33,24 +33,53 @@ elseif exist(txtfilename, 'file')
         ln2=strrep(ln, '(', '');
         ln3=strrep(ln2, ')', '');
         ln4=strsplit(ln3, ',');
-        if length(ln4) ~= 6
-            error('bonsai data does not have 6 elements?')
-        end
-        i=i+1;
-        for j=1:6
-            Mread(i,j)=str2num(ln4{j});
+        if length(ln4) == 6
+            i=i+1;
+            for j=1:6
+                Mread(i,j)=str2num(ln4{j});
+            end
+        elseif length(ln4) == 8
+            i=i+1;
+            for j=1:8
+                Mread(i,j)=str2num(ln4{j});
+            end
+        else
+            error('bonsai data does not have 6 or 8 elements?')
         end
         
     end
     
     fclose(fid);
     
+%     for 2017 data we had 3 points: 
+%         (1) nose (front tip of head stripe)
+%         (2) mouse COM
+%         (1) cricket
+%     these were repeated 5 times
+
+%     in April 2018 data we changed format to 4 points: 
+%         (1) nose (front of head stripe)
+%         (2) head (back of head stripe)
+%         (3) mouse COM
+%         (4) cricket
+%     these were repeated 5 times
+
+if size(Mread, 2)==6
+
     %data is repeated 5 times (the way bonsai writes it)
     %so take every 5th point
     mouseNosexy=Mread(1:5:end,1:2);
     mouseCOMxy=Mread(1:5:end,3:4);
     cricketxy=Mread(1:5:end,5:6);
-    
+elseif size(Mread, 2)==8
+
+    %data is repeated 7 times (the way bonsai writes it)
+    %so take every 7th point
+    mouseNosexy=Mread(1:7:end,1:2);
+    mouseHeadxy=Mread(1:7:end,3:4);
+    mouseCOMxy=Mread(1:7:end,5:6);
+    cricketxy=Mread(1:7:end,7:8);
+end
     
     out.mouseCOMxy=mouseCOMxy;
     out.mouseNosexy=mouseNosexy;
