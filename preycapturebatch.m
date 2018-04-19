@@ -11,7 +11,7 @@ delete analysis_plots.ps
 delete preycapture_groupdata.mat
 fprintf('\nAnalyzing %d files...', length(files))
 
-for i=1:length(files)
+for i=19:length(files)
    AnalyzeBonsaiTrackingData( files(i).datapath, files(i).start_frame, files(i).stop_frame)
    
    if ~mod(i,10)
