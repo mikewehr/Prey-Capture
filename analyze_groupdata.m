@@ -63,6 +63,11 @@ SpeedM=RangeM;
 CSpeedM=RangeM;
 AzimuthM=RangeM;
 
+RangeM2=RangeM;
+SpeedM2=RangeM;
+CSpeedM2=RangeM;
+AzimuthM2=RangeM;
+
 framerate=groupdata(1).framerate;
 
 for i=1:length(groupdata)
@@ -85,10 +90,17 @@ for i=1:length(groupdata)
     Azimuth=[Azimuth; azimuth(1:end-1)];
     numframes=groupdata(i).numframes;
     
+    %matrices aligned to capture
     RangeM(i,maxnumframes-numframes+1:maxnumframes)=range;
     SpeedM(i,maxnumframes-numframes+2:maxnumframes)=speed;
     CSpeedM(i,maxnumframes-numframes+2:maxnumframes)=cspeed;
     AzimuthM(i,maxnumframes-numframes+1:maxnumframes)=azimuth;
+
+        %matrices aligned to cricket drop
+    RangeM2(i,1:numframes)=range;
+    SpeedM2(i,1:numframes-1)=speed;
+    CSpeedM2(i,1:numframes-1)=cspeed;
+    AzimuthM2(i,1:numframes)=azimuth;
 
     
     %recompute xcorr but thresholding for cricket speed
@@ -244,9 +256,10 @@ figure
 hold on
 offset=0;
 for i=1:numfiles
-    plot(lag, XC1_th(i,:)+offset, 'k')
+    plot(lag, XC1(i,:)+offset, 'k')
 offset=offset+.1;
 end
+title('xcorr of mouse speed -> cricket speed, each video file')
 grid on
 
 
@@ -288,11 +301,40 @@ xlabel('time to capture, s')
 ylabel('speed, pixels/sec')
 legend('mouse speed', 'cricket speed')
 
+
+% population average range or azimuth vs time, aligned to cricket drop
+figure
+F=1:size(RangeM2,2);
+t=F/framerate;
+shadedErrorBar(t, nanmean(RangeM2), nanstd(RangeM2), 'lineprops', 'b', 'transparent', 1);
+xlim([0 10])
+xlabel('time from cricket drop, s')
+ylabel('range, pixels')
+
+figure
+shadedErrorBar(t, nanmean(AzimuthM2), nanstd(AzimuthM2), 'lineprops', 'b', 'transparent', 1);
+xlim([0 10])
+xlabel('time from cricket drop, s')
+ylabel('Azimuth, degrees')
+
+figure
+hold on
+plot(0, 0, 'b.', 0, 0, 'r.') %dummy for legend
+shadedErrorBar(t, nanmean(SpeedM2), nanstd(SpeedM2), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(t, nanmean(CSpeedM2), nanstd(CSpeedM2), 'lineprops', 'r', 'transparent', 1);
+xlim([0 10])
+xlabel('time from cricket drop, s')
+ylabel('speed, pixels/sec')
+legend('mouse speed', 'cricket speed')
+
+%%%%
 figure
 hist(Numframes/framerate, 50)
 title(sprintf('Time to capture, median=%.1f s +- %.1f s', median(Numframes)/framerate, std(Numframes/framerate)/sqrt(numfiles)))
 xlabel('time to capture, s')
 ylabel('count')
+
+%%%%
 
 % how about a 2-d histogram (e.g. azimuth vs range) where color indicates
 % time-to-capture (cool to warm), and data density is indicated by
