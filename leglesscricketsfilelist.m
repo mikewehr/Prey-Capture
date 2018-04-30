@@ -609,5 +609,325 @@ files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.23\data20
 files(i).start_frame=17;
 files(i).stop_frame=[647]; %use [] to use entire video
 
+% 4/24, 0
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_48_40.txt';
+files(i).start_frame=25;
+files(i).stop_frame=[283]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_49_59.txt';
+files(i).start_frame=31;
+files(i).stop_frame=[820]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_51_22.txt';
+files(i).start_frame=28;
+files(i).stop_frame=[1161]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_53_06.txt';
+files(i).start_frame=24;
+files(i).stop_frame=[1621]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_55_02.txt';
+files(i).start_frame=25;
+files(i).stop_frame=[824]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_56_36.txt';
+files(i).start_frame=28;
+files(i).stop_frame=[1236]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T11_58_53.txt';
+files(i).start_frame=31;
+files(i).stop_frame=[441]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_00_30.txt';
+files(i).start_frame=28;
+files(i).stop_frame=[926]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_02_54.txt';
+files(i).start_frame=18;
+files(i).stop_frame=[38]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_04_26.txt';
+files(i).start_frame=27;
+files(i).stop_frame=[1063]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_10_09.txt';
+files(i).start_frame=32;
+files(i).stop_frame=[345]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_11_29.txt';
+files(i).start_frame=54;
+files(i).stop_frame=[161]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_14_17.txt';
+files(i).start_frame=29;
+files(i).stop_frame=[794]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_16_58.txt';
+files(i).start_frame=29;
+files(i).stop_frame=[545]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_18_10.txt';
+files(i).start_frame=33;
+files(i).stop_frame=[328]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_23_36.txt';
+files(i).start_frame=57;
+files(i).stop_frame=[282]; %use [] to use entire video
 
 
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.24\data2018-04-24T12_45_20.txt';
+files(i).start_frame=31;
+files(i).stop_frame=[1898]; %use [] to use entire video
+
+% RT 4/24 cage.2
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T12_57_35.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[124]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T12_58_28.txt';
+files(i).start_frame=19;
+files(i).stop_frame=[129]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T12_59_54.txt';
+files(i).start_frame=29;
+files(i).stop_frame=[139]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_01_32.txt';
+files(i).start_frame=34;
+files(i).stop_frame=[107]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_02_57.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[267]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_04_15.txt';
+files(i).start_frame=27;
+files(i).stop_frame=[54]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_05_38.txt';
+files(i).start_frame=31;
+files(i).stop_frame=[85]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_07_42.txt';
+files(i).start_frame=41;
+files(i).stop_frame=[94]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_09_22.txt';
+files(i).start_frame=36;
+files(i).stop_frame=[54]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_10_05.txt';
+files(i).start_frame=39;
+files(i).stop_frame=[161]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_11_16.txt';
+files(i).start_frame=49;
+files(i).stop_frame=[96]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_12_43.txt';
+files(i).start_frame=46;
+files(i).stop_frame=[284]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_13_48.txt';
+files(i).start_frame=44;
+files(i).stop_frame=[675]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_15_50.txt';
+files(i).start_frame=45;
+files(i).stop_frame=[372]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_16_46.txt';
+files(i).start_frame=45;
+files(i).stop_frame=[840]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_18_32.txt';
+files(i).start_frame=46;
+files(i).stop_frame=[782]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_26_48.txt';
+files(i).start_frame=56;
+files(i).stop_frame=[173]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_28_18.txt';
+files(i).start_frame=33;
+files(i).stop_frame=[45]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_29_04.txt';
+files(i).start_frame=45;
+files(i).stop_frame=[616]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_30_30.txt';
+files(i).start_frame=47;
+files(i).stop_frame=[132]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_31_31.txt';
+files(i).start_frame=47;
+files(i).stop_frame=[237]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_33_28.txt';
+files(i).start_frame=55;
+files(i).stop_frame=[251]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\Cage.2\RT\4.24\data2018-04-24T13_36_21.txt';
+files(i).start_frame=62;
+files(i).stop_frame=[1213]; %use [] to use entire video
+
+%4/27 cage.1, 0
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_20_14.txt';
+files(i).start_frame=25;
+files(i).stop_frame=[777]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_21_55.txt';
+files(i).start_frame=48;
+files(i).stop_frame=[76]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_24_21.txt';
+files(i).start_frame=80;
+files(i).stop_frame=[317]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_25_22.txt';
+files(i).start_frame=28;
+files(i).stop_frame=[310]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_36_16.txt';
+files(i).start_frame=28;
+files(i).stop_frame=[455]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_37_29.txt';
+files(i).start_frame=45;
+files(i).stop_frame=[600]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_38_56.txt';
+files(i).start_frame=29;
+files(i).stop_frame=[493]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_40_55.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[171]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_43_00.txt';
+files(i).start_frame=32;
+files(i).stop_frame=[363]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_44_12.txt';
+files(i).start_frame=28;
+files(i).stop_frame=[1206]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.10\4.27\data2018-04-27T12_46_08.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[345]; %use [] to use entire video
+
+% 4/27 cage.12, RT
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T11_53_12.txt';
+files(i).start_frame=73;
+files(i).stop_frame=[971]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T11_55_59.txt';
+files(i).start_frame=37;
+files(i).stop_frame=[748]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T11_57_31.txt';
+files(i).start_frame=30;
+files(i).stop_frame=[1343]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T11_59_33.txt';
+files(i).start_frame=223;
+files(i).stop_frame=[321]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T12_01_35.txt';
+files(i).start_frame=39;
+files(i).stop_frame=[456]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T12_04_22.txt';
+files(i).start_frame=41;
+files(i).stop_frame=[136]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T12_06_38.txt';
+files(i).start_frame=50;
+files(i).stop_frame=[474]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T12_07_55.txt';
+files(i).start_frame=45;
+files(i).stop_frame=[359]; %use [] to use entire video
+
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T12_09_24.txt';
+files(i).start_frame=50;
+files(i).stop_frame=[572]; %use [] to use entire video
+
+i=i+1;
+files(i).datapath= 'C:\Users\lab\Desktop\Legless crickets\cage.12\RT\4.27\data2018-04-27T12_11_16.txt';
+files(i).start_frame=31;
+files(i).stop_frame=[705]; %use [] to use entire video
