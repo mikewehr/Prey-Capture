@@ -1,4 +1,4 @@
-function AnalyzeBonsaiTrackingData(datapath, start_frame, stop_frame)
+function AnalyzeBonsaiTrackingData(datapath, start_frame, stop_frame, analysis_plots_dir)
 close all
 
 if nargin==0
@@ -9,7 +9,6 @@ if nargin==0
     
 end
     
-analysis_plots_dir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
 %target directory for appended plotting output file
 groupdatadir = analysis_plots_dir; %where to accumulate groupdata file
 groupdatafilename='preycapture_groupdata.mat';
