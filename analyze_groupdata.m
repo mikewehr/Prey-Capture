@@ -4,6 +4,7 @@
 
 clear
 groupdatadir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
+%groupdatadir= 'C:\Users\lab\Desktop\826 mice bonsai';
 
 %mount wehrrig4
 %system('mount_smbfs smb://wehrrig4/C /Volumes/C')
