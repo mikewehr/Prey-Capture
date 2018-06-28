@@ -92,11 +92,11 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-%datapath=    '/Volumes/C/Users/lab/Desktop/Legless crickets/Cage.2/RT/4.3';
-datapath=     'C:\Users\lab\Desktop\Legless crickets';
+datapath=    '/Volumes/D-1/lab/';
+%datapath=     'C:\Users\lab\Desktop\Legless crickets';
 
 cd(datapath)
-[ video_file_name,video_file_path ] = uigetfile({'*.avi'},'Pick a video file');      %;*.png;*.yuv;*.bmp;*.tif'},'Pick a file');
+[ video_file_name,video_file_path ] = uigetfile({'*.*'},'Pick a video file');      %;*.png;*.yuv;*.bmp;*.tif'},'Pick a file');
 if(video_file_path == 0)
     return;
 end
