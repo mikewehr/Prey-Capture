@@ -93,7 +93,9 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 %datapath=    '/Volumes/C/Users/lab/Desktop/Legless crickets/Cage.2/RT/4.3';
-datapath=     'C:\Users\lab\Desktop\Legless crickets';
+%datapath=     'C:\Users\lab\Desktop\Legless crickets';
+%datapath=     'D:\lab\Data\CamMice\8287\CamDay3'
+datapath= 'D:\lab\Data\PvChr2_group2'
 
 cd(datapath)
 [ video_file_name,video_file_path ] = uigetfile({'*.avi'},'Pick a video file');      %;*.png;*.yuv;*.bmp;*.tif'},'Pick a file');
