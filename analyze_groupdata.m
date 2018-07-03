@@ -11,7 +11,6 @@ groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
 %system('mount_smbfs smb://wehrrig4/C /Volumes/C')
 close all
 
-
 groupdatafilename='preycapture_groupdata';
 
 %adjust filenames to work on a mac
@@ -26,6 +25,20 @@ cd(groupdatadir)
 load(groupdatafilename)
 numfiles=length(groupdata);
 fprintf('\nanalyzing %d files', numfiles)
+
+% june 28 2018
+% netanya measured pixel size
+% 1 pixel = .5 mm = .05 cm
+% 1 mm = 2 pixels
+% speeds were calculate in AnalyzeBonsaiTrackingData as pixels/frame
+% conversion factor is (.05 cm/pixel)*(30 frames/s) = 1.5
+% speed in cm/s = (speed in pixels/frame)*speedcal
+% range in cm = range in pixels * distancecal
+framerate=groupdata(1).framerate;
+speedcal=.05*framerate;
+distancecal=.05;
+
+
 
 %     speed=groupdata(i).speed;
 %     cspeed=groupdata(i).cspeed;
@@ -70,7 +83,6 @@ SpeedM2=RangeM;
 CSpeedM2=RangeM;
 AzimuthM2=RangeM;
 
-framerate=groupdata(1).framerate;
 
 for i=1:length(groupdata)
     if ~mod(i,10)
@@ -81,8 +93,11 @@ for i=1:length(groupdata)
     %     xc3=groupdata(i).xc3; %xcorr of mouse speed -> range
     
     range=groupdata(i).range;
+    range=range*distancecal;  %convert to cm
     speed=groupdata(i).speed;
+    speed=speed*speedcal; %convert to cm/s
     cspeed=groupdata(i).cspeed;
+    cspeed=cspeed*speedcal; %convert to cm/s
     t=groupdata(i).t;
     azimuth=groupdata(i).azimuth;
     Range=[Range; range(1:end-1)];
@@ -97,13 +112,13 @@ for i=1:length(groupdata)
     SpeedM(i,maxnumframes-numframes+2:maxnumframes)=speed;
     CSpeedM(i,maxnumframes-numframes+2:maxnumframes)=cspeed;
     AzimuthM(i,maxnumframes-numframes+1:maxnumframes)=azimuth;
-
-        %matrices aligned to cricket drop
+    
+    %matrices aligned to cricket drop
     RangeM2(i,1:numframes)=range;
     SpeedM2(i,1:numframes-1)=speed;
     CSpeedM2(i,1:numframes-1)=cspeed;
     AzimuthM2(i,1:numframes)=azimuth;
-
+    
     
     %recompute xcorr but thresholding for cricket speed
     maxlag=1*framerate;
@@ -130,12 +145,12 @@ for i=1:length(groupdata)
     mspeed_rth=nan(size(cspeed));
     rthresh=50;
     x=find(range<rthresh);
-    x=x(x<=length(cspeed_rth)); %trim to size of speed vector 
+    x=x(x<=length(cspeed_rth)); %trim to size of speed vector
     cspeed_rth(x)=cspeed(x);
     mspeed_rth(x)=speed(x);
     mspeed_rth(isnan(mspeed_rth))=0; %this artificially sets speed to zero wherever range is above thresh (xcorr cannot accept nans)
     cspeed_rth(isnan(cspeed_rth))=0; %this artificially sets speed to zero wherever range is above thresh (xcorr cannot accept nans)
-
+    
     
     [xc1, lag]=xcorr(speed, cspeed, maxlag, 'unbiased');%unbiased
     [xc1_th, lag]=xcorr(speed, cspeed_th, maxlag, 'unbiased');%unbiased
@@ -196,54 +211,54 @@ xlabel('time lag, ms')
 
 %2-D histogram of azimuth vs range
 %histogram azimuth -360-3600 degrees in 60 bins, and ranges 0-1200 px in 60 bins
-Azimuthedges=linspace(0, 180, 20);
-Rangeedges=linspace(0, 1200, 20);
+Azimuthedges=linspace(0, 180, 10);
+Rangeedges=linspace(0, 25, 10);
 histmat=hist2(Azimuth, Range, Azimuthedges, Rangeedges);
 figure;
-pcolor(Azimuthedges,Rangeedges,histmat);
+pcolor(Azimuthedges,Rangeedges,histmat');
 shading interp
 xlabel('Azimuth, degrees')
-ylabel('Range, px')
+ylabel('Range, cm')
 % colorbar ;
 title(sprintf('Azimuth vs. Range, n=%d', numfiles))
 
 
 % 2-D histogram of range vs speed
 %histogram speeds 0-40 px/s  in 30 bins, and ranges 0-1200 px in 60 bins
-Speededges=linspace(0, 40, 20);
-Rangeedges=linspace(0, 1200, 30);
+Speededges=linspace(0, 20, 10);
+Rangeedges=linspace(0, 25, 10);
 histmat=hist2(Speed, Range, Speededges, Rangeedges);
 figure;
-pcolor(Speededges,Rangeedges,histmat);
+pcolor(Speededges,Rangeedges,histmat');
 shading interp
-xlabel('mouse speed, px/s')
-ylabel('range, px')
+xlabel('mouse speed, cm/s')
+ylabel('range, cm')
 % colorbar ;
 title(sprintf('Mouse Speed vs. Range, n=%d', numfiles))
 
 % 2-D histogram of range vs cricket speed
 %histogram speeds 0-40 px/s  in 30 bins, and ranges 0-1200 px in 60 bins
-CSpeededges=linspace(0, 40, 20);
-Rangeedges=linspace(0, 1200, 30);
+CSpeededges=linspace(0, 10, 10);
+Rangeedges=linspace(0, 25, 10);
 histmat=hist2(CSpeed, Range, CSpeededges, Rangeedges);
 figure;
-pcolor(CSpeededges,Rangeedges,histmat);
+pcolor(CSpeededges,Rangeedges,histmat');
 shading interp
-xlabel('cricket speed, px/s')
-ylabel('range, px')
+xlabel('cricket speed, cm/s')
+ylabel('range, cm')
 % colorbar ;
 title(sprintf('cricket Speed vs. Range, n=%d', numfiles))
 
 % 2-D histogram of mouse speed vs cricket speed
 %histogram speeds 0-40 px/s  in 30 bins, and ranges 0-1200 px in 60 bins
-CSpeededges=linspace(0, 50, 25);
-Speededges=linspace(0, 40, 20);
+CSpeededges=linspace(0, 10, 10);
+Speededges=linspace(0, 20, 10);
 histmat=hist2(Speed, CSpeed, Speededges, CSpeededges);
 figure;
-pcolor(Speededges,CSpeededges,histmat);
+pcolor(Speededges,CSpeededges,histmat');
 shading interp
-xlabel('mouse speed, px/s')
-ylabel('cricket speed, px/s')
+xlabel('mouse speed, cm/s')
+ylabel('cricket speed, cm/s')
 % colorbar ;
 title(sprintf('mouse speed vs cricket Speed , n=%d', numfiles))
 
@@ -259,7 +274,7 @@ hold on
 offset=0;
 for i=1:numfiles
     plot(lag, XC1(i,:)+offset, 'k')
-offset=offset+.1;
+    offset=offset+.1;
 end
 title('xcorr of mouse speed -> cricket speed, each video file')
 grid on
@@ -285,7 +300,7 @@ t=F/framerate;
 shadedErrorBar(t, nanmean(RangeM), nanstd(RangeM), 'lineprops', 'b', 'transparent', 1);
 xlim([-20 0])
 xlabel('time to capture, s')
-ylabel('range, pixels')
+ylabel('range, cm')
 
 figure
 shadedErrorBar(t, nanmean(AzimuthM), nanstd(AzimuthM), 'lineprops', 'b', 'transparent', 1);
@@ -300,7 +315,7 @@ shadedErrorBar(t, nanmean(SpeedM), nanstd(SpeedM), 'lineprops', 'b', 'transparen
 shadedErrorBar(t, nanmean(CSpeedM), nanstd(CSpeedM), 'lineprops', 'r', 'transparent', 1);
 xlim([-20 0])
 xlabel('time to capture, s')
-ylabel('speed, pixels/sec')
+ylabel('speed, cm/s')
 legend('mouse speed', 'cricket speed')
 
 
@@ -311,7 +326,7 @@ t=F/framerate;
 shadedErrorBar(t, nanmean(RangeM2), nanstd(RangeM2), 'lineprops', 'b', 'transparent', 1);
 xlim([0 10])
 xlabel('time from cricket drop, s')
-ylabel('range, pixels')
+ylabel('range, cm')
 
 figure
 shadedErrorBar(t, nanmean(AzimuthM2), nanstd(AzimuthM2), 'lineprops', 'b', 'transparent', 1);
@@ -326,7 +341,7 @@ shadedErrorBar(t, nanmean(SpeedM2), nanstd(SpeedM2), 'lineprops', 'b', 'transpar
 shadedErrorBar(t, nanmean(CSpeedM2), nanstd(CSpeedM2), 'lineprops', 'r', 'transparent', 1);
 xlim([0 10])
 xlabel('time from cricket drop, s')
-ylabel('speed, pixels/sec')
+ylabel('speed, cm/s')
 legend('mouse speed', 'cricket speed')
 
 %%%%
@@ -351,39 +366,45 @@ ylabel('count')
 %cricket stops moving
 %cricket jumps
 
-cspeed_thresh=40;
-i=find(CSpeed>cspeed_thresh);
+cspeed_thresh=1;
+i=find(CSpeed>cspeed_thresh); %i are the indices where cricket is moving
 
-t=1:length(Speed);t=t/30;
+t=1:length(Speed);t=t/framerate; %t is in s
 figure
 hold on
-plot(t, CSpeed, t(i), CSpeed(i), '.')
+plot(t, CSpeed, t(i), CSpeed(i), 'ro')
 xlabel('time, s')
-ylabel('cricket speed')
-xlim([100 200])
+ylabel('cricket speed, cm/s')
+xlim([0 200])
 tt=t(i);
-tt=tt(1:end-1);
+% tt=tt(1:end-1); not sure why I need to do this? commenting out 6-28-2018
+%tt are the times in s where cricket is moving
 
 %plot(tt, diff(i)-10, 'ro')
 
-cspeed_onsetsi=1+find(diff(i)>1);
-cspeed_offsetsi=find(diff(i)>1);
+%this is fucked up somehow:
+
+diffi=diff(i);
+cspeed_onsetsi=[1; 1+find(diffi>1)];
+cspeed_offsetsi=find(diffi>1);
 %these are indexed into i, convert back into frames
-cspeed_onsets=round(tt(cspeed_onsetsi)*30);
-cspeed_offsets=round(tt(cspeed_offsetsi)*30);
+cspeed_onsets=i(cspeed_onsetsi); %frames on which cricket starts moving
+cspeed_offsets=i(cspeed_offsetsi); %frames on which cricket stops moving
 
 stem(t(cspeed_onsets), 20*ones(size(cspeed_onsets)), 'go')
 stem(t(cspeed_offsets), 20*ones(size(cspeed_offsets)), 'mo')
 
 figure
-plot(CSpeed)
+plot(t, CSpeed)
+xlabel('time, s')
+ylabel('cricket speed, cm/s')
 hold on
-stem((cspeed_onsets), 20*ones(size(cspeed_onsets)), 'go')
+stem(t(cspeed_onsets), 20*ones(size(cspeed_onsets)), 'go')
 
 k=0;
 winstart=-200;
 winstop=200;
-for j=cspeed_onsets
+for j=cspeed_onsets'
     if j>-winstart & j+winstop<length(Azimuth)
         k=k+1;
         Az_cspeedonset(k,:)=Azimuth(j+winstart:j+winstop);
@@ -391,7 +412,7 @@ for j=cspeed_onsets
     end
 end
 
-for j=cspeed_offsets
+for j=cspeed_offsets'
     if j>-winstart & j+winstop<length(Azimuth)
         k=k+1;
         Az_cspeedoffset(k,:)=Azimuth(j+winstart:j+winstop);
@@ -408,7 +429,7 @@ grid on
 figure
 shadedErrorBar(winstart:winstop, mean(Range_cspeedonset), nanstd(Range_cspeedonset), 'lineprops', 'b', 'transparent', 1);
 xlabel('frames relative to cricket starts moving')
-ylabel('Range')
+ylabel('Range, cm')
 grid on
 
 
@@ -421,11 +442,85 @@ grid on
 figure
 shadedErrorBar(winstart:winstop, mean(Range_cspeedoffset), nanstd(Range_cspeedoffset), 'lineprops', 'b', 'transparent', 1);
 xlabel('frames relative to cricket stops moving')
-ylabel('Range')
+ylabel('Range, cm')
 grid on
 
-delete groupdata_plots.ps
-if 1
+% "target acquisition" is a critical event in the capture sequence
+% could we detect that in the tracking data somehow and align to it?
+% what is the signature of target acquisition?
+% cricket goes from still to moving.
+% mouse changes direction towards cricket
+% this starts driving range down.
+
+% let's say he needs to have been stopped for 1 second
+still_dur_s=1; %how long in seconds the cricket needs to have been stopped
+still_dur_frames=still_dur_s*framerate;
+new_cspeed_onsets=[];
+
+for j=cspeed_onsets' %frames
+    if any (cspeed_onsets > j-still_dur_frames & cspeed_onsets <j) | ...
+            any (cspeed_offsets > j-still_dur_frames & cspeed_offsets <j)
+        %no good, he moved within window
+    else
+        %it's a candidate
+        new_cspeed_onsets=[new_cspeed_onsets j];
+        % these are the frames on which he started moving after having been still for still_dur
+    end
+end
+
+%next we look in a 1-second window after cricket starts moving, and ask
+%whether mouse changes direction towards cricket (azimuth decreases) and
+%range decreases
+response_win_s=1; %how long to look at changes in range and azimuth, in seconds
+response_win_frames=response_win_s*framerate;
+target_acquisitions=[];
+
+k=0;
+AZ=[];
+RG=[];
+TA=[]; %k's that pass criteria for target acquistion
+fig=figure;
+for j=new_cspeed_onsets %frames
+    az=Azimuth(j:j+response_win_frames);
+    rg=Range(j:j+response_win_frames);
+    k=k+1;
+    AZ(k,:)=az;
+    RG(k,:)=rg;
+    
+%     figure(fig)
+%     hold on
+%     plot((-20:50), CSpeed(j-20:j+50), 'c')
+%     plot((-20:50), Speed(j-20:j+50), 'r')
+%     %     plot((-20:50), Azimuth(j-20:j+50), 'm')
+%     plot((-20:50), Range(j-20:j+50), 'g')
+%     line([1 1], ylim, 'color', 'g') %onset
+%     %     plot((0:response_win_frames), az, 'm', 'linewidth', 2)
+%     plot((0:response_win_frames), rg, 'g', 'linewidth', 2)
+%     legend('crcket speed', 'mouse speed', 'azimuth', 'range','cricket starts moving', 'az' ,'rg')
+%     
+    x=0:response_win_frames;
+    X(:,1)=x;
+    X(:,2)=ones(size(x));
+    [B,BINT,R,RINT,STATS] = regress(az, X);
+    %plot(x, X*B)
+    [B2,~,~,~,STATS2] = regress(rg, X);
+%     plot(x, X*B2)
+    if B(1)<0 & STATS(3)<.05 %azimuth is significantly decreasing
+        if B2(1)<0 & STATS2(3)<.05 %range is significantly decreasing
+            TA=[TA k];
+            fprintf('\nhit')
+        end
+    end
+    
+    
+end
+
+%OK, TA contains the k indices that qualify as target acquisitions
+%WHAT NEXT?
+
+if 0
+    
+    delete groupdata_plots.ps
     for f=1:get(gcf, 'Number')
         figure(f)
         print -dpsc2 -append groupdata_plots.ps
