@@ -347,7 +347,7 @@ tspeed=t(2:end);
 figure
 plot(tspeed, speed)
 xlabel('time, s')
-ylabel('speed, px/s')
+ylabel('speed, px/frame')
 title('mouse speed vs. time')
 
 %cricket speed
@@ -357,7 +357,7 @@ cspeed=filtfilt(b,a,cspeed);
 figure
 plot(tspeed, cspeed)
 xlabel('time, s')
-ylabel('speed, px/s')
+ylabel('speed, px/frame')
 title('cricket speed vs. time')
 
 figure
@@ -365,7 +365,7 @@ figure
 plot(tspeed, 10*speed, tspeed, 10*cspeed, t, range, t, RelativeAzimuth) %weird because they are different units 
 legend('mouse speed', 'cricket speed', 'range', 'azimuth')
 xlabel('time, s')
-ylabel('speed, px/s')
+ylabel('speed, px/frame')
 grid on
 line(xlim, [0 0], 'color', 'k')
 th=title(datapath);
