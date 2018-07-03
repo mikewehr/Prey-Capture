@@ -4,7 +4,8 @@
 
 clear
 %groupdatadir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
-groupdatadir= 'C:\Users\lab\Desktop\826 mice bonsai';
+groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
+%groupdatadir= 'D:\lab\Data\826 mice bonsai';
 
 %mount wehrrig4
 %system('mount_smbfs smb://wehrrig4/C /Volumes/C')
@@ -17,6 +18,7 @@ groupdatafilename='preycapture_groupdata';
 if ismac
     groupdatadir= strrep(groupdatadir, '\', '/');
     groupdatadir= strrep(groupdatadir, 'C:', '/Volumes/C');
+    groupdatadir= strrep(groupdatadir, 'D:', '/Volumes/D');
     
 end
 
@@ -178,7 +180,7 @@ set(p, 'markersize', 20)
 legend('cricket speed -> mouse speed','cricket speed th -> mouse speed',...
     'cricket speed (range th) -> mouse speed (range th)',...
     'cricket speed -> range','cricket speed th -> range','mouse speed -> range', ...
-    'location', 'NorthWest')
+    'location', 'SouthOutside')
 %set(p, 'vis', 'off')
 
 shadedErrorBar(lag, mean(XC1), semxc1, 'lineprops', 'b', 'transparent', 1);
