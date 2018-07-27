@@ -98,7 +98,7 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 datapath= 'D:\lab\Data\PvChr2_group2'
 
 cd(datapath)
-[ video_file_name,video_file_path ] = uigetfile({'*.avi'},'Pick a video file');      %;*.png;*.yuv;*.bmp;*.tif'},'Pick a file');
+[ video_file_name,video_file_path ] = uigetfile({'*'},'Pick a video file');      %;*.png;*.yuv;*.bmp;*.tif'},'Pick a file');
 if(video_file_path == 0)
     return;
 end
