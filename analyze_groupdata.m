@@ -27,7 +27,6 @@ numfiles=length(groupdata);
 fprintf('\nanalyzing %d files', numfiles)
 
 % june 28 2018
-% netanya measured pixel size
 % 1 pixel = .5 mm = .05 cm
 % 1 mm = 2 pixels
 % speeds were calculate in AnalyzeBonsaiTrackingData as pixels/frame
@@ -38,28 +37,6 @@ framerate=groupdata(1).framerate;
 speedcal=.05*framerate;
 distancecal=.05;
 
-
-
-%     speed=groupdata(i).speed;
-%     cspeed=groupdata(i).cspeed;
-%     range=groupdata(i).range;
-%     lag=groupdata(i).lag; %time vector for xcorrs
-%     xc1=groupdata(i).xc1; %xcorr of cricket speed -> mouse speed
-%     xc2=groupdata(i).xc2; %xcorr of cricket speed -> range
-%     xc3=groupdata(i).xc3; %xcorr of mouse speed -> range
-%     azimuth=groupdata(i).azimuth;
-%     t=groupdata(i).t; %time vector for distances, in seconds
-%     tspeed=groupdata(i).tspeed; %%time vector for speeds, in seconds (=1 sample shorter than t)
-%     framerate=groupdata(i).framerate;
-%     smouseCOMx=groupdata(i).smouseCOMx;
-%     smouseCOMy=groupdata(i).smouseCOMy;
-%     scricketx=groupdata(i).scricketx;
-%     scrickety=groupdata(i).scrickety;
-%     smouseNosex=groupdata(i).smouseNosex;
-%     smouseNosey=groupdata(i).smouseNosey;
-%     numframes=groupdata(i).numframes;
-%     start_frame=groupdata(i).start_frame;
-%     stop_frame=groupdata(i).stop_frame;
 Range=[];
 Speed=[];
 CSpeed=[];
@@ -88,9 +65,6 @@ for i=1:length(groupdata)
     if ~mod(i,10)
         fprintf('\nfile %d/%d', i, numfiles)
     end
-    %     xc1=groupdata(i).xc1; %xcorr of cricket speed -> mouse speed
-    %     xc2=groupdata(i).xc2; %xcorr of cricket speed -> range
-    %     xc3=groupdata(i).xc3; %xcorr of mouse speed -> range
     
     range=groupdata(i).range;
     range=range*distancecal;  %convert to cm
@@ -210,7 +184,6 @@ xlabel('time lag, ms')
 
 
 %2-D histogram of azimuth vs range
-%histogram azimuth -360-3600 degrees in 60 bins, and ranges 0-1200 px in 60 bins
 Azimuthedges=linspace(0, 180, 10);
 Rangeedges=linspace(0, 25, 10);
 histmat=hist2(Azimuth, Range, Azimuthedges, Rangeedges);
@@ -264,36 +237,9 @@ title(sprintf('mouse speed vs cricket Speed , n=%d', numfiles))
 
 
 
-%things to try:
-% only look where cricket speed is above a threshold
-% only look for last n seconds (i.e. prior to catch)
 
 
-figure
-hold on
-offset=0;
-for i=1:numfiles
-    plot(lag, XC1(i,:)+offset, 'k')
-    offset=offset+.1;
-end
-title('xcorr of mouse speed -> cricket speed, each video file')
-grid on
-
-
-% looks flat, presumably because without a threshold, most of the time the cricket is holding still
-% figure
-% hold on
-% offset=0;
-% for i=1:numfiles
-%     plot(lag, XC1(i,:)+offset, 'k')
-% offset=offset+10;
-% end
-% grid on
-
-%how about a 2-d histogram of range over time, aligned to capture
-
-% or for that matter a population average range vs time, aligned to capture
-% and azimuth, speed, etc. as well
+% population average range vs time, aligned to capture
 figure
 F=-size(RangeM,2)+1:1:0;
 t=F/framerate;
@@ -302,12 +248,14 @@ xlim([-20 0])
 xlabel('time to capture, s')
 ylabel('range, cm')
 
+% population average azimuth vs time, aligned to capture
 figure
 shadedErrorBar(t, nanmean(AzimuthM), nanstd(AzimuthM), 'lineprops', 'b', 'transparent', 1);
 xlim([-20 0])
 xlabel('time to capture, s')
 ylabel('Azimuth, degrees')
 
+% population average speed vs time, aligned to capture
 figure
 hold on
 plot(0, 0, 'b.', 0, 0, 'r.') %dummy for legend
@@ -319,7 +267,7 @@ ylabel('speed, cm/s')
 legend('mouse speed', 'cricket speed')
 
 
-% population average range or azimuth vs time, aligned to cricket drop
+% population average range vs time, aligned to cricket drop
 figure
 F=1:size(RangeM2,2);
 t=F/framerate;
@@ -328,12 +276,14 @@ xlim([0 10])
 xlabel('time from cricket drop, s')
 ylabel('range, cm')
 
+% % population average azimuth vs time, aligned to cricket drop
 figure
 shadedErrorBar(t, nanmean(AzimuthM2), nanstd(AzimuthM2), 'lineprops', 'b', 'transparent', 1);
 xlim([0 10])
 xlabel('time from cricket drop, s')
 ylabel('Azimuth, degrees')
 
+% % population average speed vs time, aligned to cricket drop
 figure
 hold on
 plot(0, 0, 'b.', 0, 0, 'r.') %dummy for legend
@@ -351,11 +301,6 @@ title(sprintf('Time to capture, median=%.1f s +- %.1f s', median(Numframes)/fram
 xlabel('time to capture, s')
 ylabel('count')
 
-%%%%
-
-% how about a 2-d histogram (e.g. azimuth vs range) where color indicates
-% time-to-capture (cool to warm), and data density is indicated by
-% brightness
 
 %%%%%%%%%%%%%%%%%%
 % look for motifs
@@ -377,12 +322,7 @@ xlabel('time, s')
 ylabel('cricket speed, cm/s')
 xlim([0 200])
 tt=t(i);
-% tt=tt(1:end-1); not sure why I need to do this? commenting out 6-28-2018
 %tt are the times in s where cricket is moving
-
-%plot(tt, diff(i)-10, 'ro')
-
-%this is fucked up somehow:
 
 diffi=diff(i);
 cspeed_onsetsi=[1; 1+find(diffi>1)];
@@ -460,7 +400,7 @@ new_cspeed_onsets=[];
 for j=cspeed_onsets' %frames
     if any (cspeed_onsets > j-still_dur_frames & cspeed_onsets <j) | ...
             any (cspeed_offsets > j-still_dur_frames & cspeed_offsets <j)
-        %no good, he moved within window
+        %discard, he moved within window
     else
         %it's a candidate
         new_cspeed_onsets=[new_cspeed_onsets j];
@@ -487,28 +427,28 @@ for j=new_cspeed_onsets %frames
     AZ(k,:)=az;
     RG(k,:)=rg;
     
-%     figure(fig)
-%     hold on
-%     plot((-20:50), CSpeed(j-20:j+50), 'c')
-%     plot((-20:50), Speed(j-20:j+50), 'r')
-%     %     plot((-20:50), Azimuth(j-20:j+50), 'm')
-%     plot((-20:50), Range(j-20:j+50), 'g')
-%     line([1 1], ylim, 'color', 'g') %onset
-%     %     plot((0:response_win_frames), az, 'm', 'linewidth', 2)
-%     plot((0:response_win_frames), rg, 'g', 'linewidth', 2)
-%     legend('crcket speed', 'mouse speed', 'azimuth', 'range','cricket starts moving', 'az' ,'rg')
-%     
+    figure(fig)
+    hold on
+    plot((-20:50), CSpeed(j-20:j+50), 'c')
+    plot((-20:50), Speed(j-20:j+50), 'r')
+    %     plot((-20:50), Azimuth(j-20:j+50), 'm')
+    plot((-20:50), Range(j-20:j+50), 'g')
+    line([1 1], ylim, 'color', 'g') %onset
+    %     plot((0:response_win_frames), az, 'm', 'linewidth', 2)
+    plot((0:response_win_frames), rg, 'g', 'linewidth', 2)
+    legend('crcket speed', 'mouse speed', 'azimuth', 'range','cricket starts moving', 'az' ,'rg')
+    
     x=0:response_win_frames;
     X(:,1)=x;
     X(:,2)=ones(size(x));
     [B,BINT,R,RINT,STATS] = regress(az, X);
-    %plot(x, X*B)
+    plot(x, X*B)
     [B2,~,~,~,STATS2] = regress(rg, X);
-%     plot(x, X*B2)
+    plot(x, X*B2)
     if B(1)<0 & STATS(3)<.05 %azimuth is significantly decreasing
         if B2(1)<0 & STATS2(3)<.05 %range is significantly decreasing
             TA=[TA k];
-            fprintf('\nhit')
+%             fprintf('\nhit')
         end
     end
     
@@ -516,10 +456,10 @@ for j=new_cspeed_onsets %frames
 end
 
 %OK, TA contains the k indices that qualify as target acquisitions
-%WHAT NEXT?
+%what next to analyze behavior re: target acquisitions?
 
-if 0
-    
+%print group data plots to postscript file
+if 0    
     delete groupdata_plots.ps
     for f=1:get(gcf, 'Number')
         figure(f)

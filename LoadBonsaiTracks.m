@@ -1,7 +1,5 @@
 function out = LoadBonsaiTracks(datapath)
 
-
-%cd(datapath)
 %check for outfile and load if present
 [p, f, e]=fileparts(datapath);
  cd(p)
@@ -51,6 +49,9 @@ elseif exist(txtfilename, 'file')
     
     fclose(fid);
     
+%bonsai writes the data for each frame n-1 times, where n is the number
+%of measurements we are writing
+
 %     for 2017 data we had 3 points: 
 %         (1) nose (front tip of head stripe)
 %         (2) mouse COM
@@ -62,7 +63,8 @@ elseif exist(txtfilename, 'file')
 %         (2) head (back of head stripe)
 %         (3) mouse COM
 %         (4) cricket
-%     these were repeated 5 times
+%     these were repeated 7 times
+
 
 if size(Mread, 2)==6
 
