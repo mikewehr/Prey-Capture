@@ -9,6 +9,9 @@ mw 07.11.2017
 
 flash rate = 1000/(PulseDur+PulseInterval)
 if PulseDur and PulseInterval =5, then rate=100 Hz
+
+8-1-2018 change to 40 Hz
+if PulseDur 5 and PulseInterval =20, then rate=40 Hz
 */
 
 const int LEDOutPin = 13;       // pin to drive LED
@@ -16,7 +19,7 @@ const int LEDOutPin2 = 11;       // pin to drive LED
 const int LaserOutPin = 12;       // pin to drive Laser
 const int SwitchPin = 2;     // pin attached to switch
 const int PulseDur = 5;       // pulse duration in ms
-const int PulseInterval = 5;       // inter-pulse interval in ms
+const int PulseInterval = 20;       // inter-pulse interval in ms
 
 // variables will change:
 int SwitchState = 0;         // variable for reading the switch status
