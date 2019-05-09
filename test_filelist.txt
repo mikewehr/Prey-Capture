@@ -1,0 +1,13 @@
+
+
+cell
+Path: /Users/mikewehr/Documents/Analysis/PreyCapture data/Trial1_Cricket_only_freely moving
+Filename: Trial1_cricketOnly_free.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: /Users/mikewehr/Documents/Analysis/PreyCapture data/Trial1_Cricket_only_freely moving
+Filename: Trial1_cricketOnly_free.avi
+Cluster Quality: 0
+PV cell: 0
