@@ -11,3 +11,63 @@ Path: /Users/mikewehr/Documents/Analysis/PreyCapture data/Trial1_Cricket_only_fr
 Filename: Trial1_cricketOnly_free.avi
 Cluster Quality: 0
 PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: MT2017-11-03T14_13_51.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: MT2017-11-03T14_20_19.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: MT2017-11-03T14_22_11.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: MT2017-11-03T14_24_22.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: MT2017-11-03T14_27_05.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: raw2017-11-03T14_13_51.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: raw2017-11-03T14_20_19.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: raw2017-11-03T14_22_11.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: raw2017-11-03T14_24_21.avi
+Cluster Quality: 0
+PV cell: 0
+
+trial
+Path: D:\lab\Data\826 mice bonsai\Cage 4\0\11-3
+Filename: raw2017-11-03T14_27_05.avi
+Cluster Quality: 0
+PV cell: 0

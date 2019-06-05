@@ -1,4 +1,4 @@
-function AnalyzeBonsaiTrackingData2(varargin)
+function AnalyzeBonsaiTrackingData2noears(varargin)
 %this function loads tracking data from indivual sessions, computes several
 %things like speed, range, azimuth, creates several plots and prints them
 %to a postscript file, and saves the output to a groupdata file.
@@ -33,7 +33,7 @@ if ismac
     
 end
 
-out=LoadDeepCutTracks2();
+out=LoadDeepCutTracks2(1);
 
 mouseCOMxy=out.mouseCOMxy;
 mouseNosexy=out.mouseNosexy;
@@ -45,67 +45,59 @@ mouseCOMxy=mouseCOMxy(start_frame:stop_frame,:);
 mouseNosexy=mouseNosexy(start_frame:stop_frame,:);
 cricketxy=cricketxy(start_frame:stop_frame,:);
 %%%%%%    Clip LearTracking from start:stop     %%%%%%
-LearStart = find(Lear.skysync==start_frame,1);
-if isempty(LearStart)
-    LearStart = Lear.skysync(1);
-end
-LearStop = find(Lear.skysync==stop_frame,1);
-if isempty(LearStop)
-    LearStop = find(Lear.skysync==stop_frame-1,1);
-end
-LcDorMed1 = out.LcDorMed1((LearStart:LearStop),:);
-LcDorMed2 = out.LcDorMed2((LearStart:LearStop),:);
-LcDorLat1 = out.LcDorLat1((LearStart:LearStop),:);
-LcDorLat2 = out.LcDorLat2((LearStart:LearStop),:);
-LcDist = out.LcDist((LearStart:LearStop),:);
-LcVenMed1 = out.LcVenMed1((LearStart:LearStop),:);
-LcVenMed2 = out.LcVenMed2((LearStart:LearStop),:);
-LcVenLat1 = out.LcVenLat1((LearStart:LearStop),:);
-LcVenLat2 = out.LcVenLat2((LearStart:LearStop),:);
-LiDorMed1 = out.LiDorMed1((LearStart:LearStop),:);
-LiDorMed2 = out.LiDorMed2((LearStart:LearStop),:);
-LiDorLat1 = out.LiDorLat1((LearStart:LearStop),:);
-LiDorLat2 = out.LiDorLat2((LearStart:LearStop),:);
-LiDist = out.LiDist((LearStart:LearStop),:);
-LiVenLat1 = out.LiVenLat1((LearStart:LearStop),:);
-LiVenLat2 = out.LiVenLat2((LearStart:LearStop),:);
-LiVenMed1 = out.LiVenMed1((LearStart:LearStop),:);
-LiVenMed2 = out.LiVenMed2((LearStart:LearStop),:);
-LiThetaAverage = out.LiThetaAverage((LearStart:LearStop),:);
-%%%%%%    Clip RearTracking from start:stop     %%%%%%
-RearStart = find(Lear.skysync==start_frame,1);
-if isempty(RearStart)
-    RearStart = Rear.skysync(1);
-end
-RearStop = find(Lear.skysync==stop_frame,1);
-if isempty(RearStop)
-    RearStop = find(Rear.skysync==stop_frame-1,1);
-end
-RcDorMed1 = out.RcDorMed1((RearStart:RearStop),:);
-RcDorMed2 = out.RcDorMed2((RearStart:RearStop),:);
-RcDorLat1 = out.RcDorLat1((RearStart:RearStop),:);
-RcDorLat2 = out.RcDorLat2((RearStart:RearStop),:);
-RcDist = out.RcDist((RearStart:RearStop),:);
-RcVenLat1 = out.RcVenLat1((RearStart:RearStop),:);
-RcVenLat2 = out.RcVenLat2((RearStart:RearStop),:);
-RcVenMed1 = out.RcVenMed1((RearStart:RearStop),:);
-RcVenMed2 = out.RcVenMed2((RearStart:RearStop),:);
-RiDorMed1 = out.RiDorMed1((RearStart:RearStop),:);%%%%%
-RiDorMed2 = out.RiDorMed2((RearStart:RearStop),:);
-RiDorLat1 = out.RiDorLat1((RearStart:RearStop),:);
-RiDorLat2 = out.RiDorLat2((RearStart:RearStop),:);
-RiDist = out.RiDist((RearStart:RearStop),:);
-RiVenLat1 = out.RiVenLat1((RearStart:RearStop),:);
-RiVenLat2 = out.RiVenLat2((RearStart:RearStop),:);
-RiVenMed1 = out.RiVenMed1((RearStart:RearStop),:);
-RiVenMed2 = out.RiVenMed2((RearStart:RearStop),:);
-RiThetaAverage = out.RiThetaAverage((RearStart:RearStop),:);
+% LearStart = find(Lear.skysync==start_frame,1);
+% if isempty(LearStart)
+%     LearStart = find(Lear.skysync==start_frame-1,1);
+% end
+% LearStop = find(Lear.skysync==stop_frame,1);
+% if isempty(LearStop)
+%     LearStop = find(Lear.skysync==stop_frame-1,1);
+% end
+% LcDorMed = out.LcDorMed((LearStart:LearStop),:);
+% LcDorLat = out.LcDorLat((LearStart:LearStop),:);
+% LcDist = out.LcDist((LearStart:LearStop),:);
+% LcVenMed = out.LcVenMed((LearStart:LearStop),:);
+% LcVenLat = out.LcVenLat((LearStart:LearStop),:);
+% LiDorMed = out.LiDorMed((LearStart:LearStop),:);
+% LiDorLat = out.LiDorLat((LearStart:LearStop),:);
+% LiDist = out.LiDist((LearStart:LearStop),:);
+% LiVenLat = out.LiVenLat((LearStart:LearStop),:);
+% LiVenMed = out.LiVenMed((LearStart:LearStop),:);
+% LiThetaAverage = out.LiThetaAverage((LearStart:LearStop),:);
+% %%%%%%    Clip RearTracking from start:stop     %%%%%%
+% RearStart = find(Lear.skysync==start_frame,1);
+% if isempty(RearStart)
+%     RearStart = find(Rear.skysync==start_frame-1,1);
+% end
+% RearStop = find(Lear.skysync==stop_frame,1);
+% if isempty(RearStop)
+%     RearStop = find(Rear.skysync==stop_frame-1,1);
+% end
+% RcDorMed1 = out.RcDorMed1((RearStart:RearStop),:);
+% RcDorMed2 = out.RcDorMed2((RearStart:RearStop),:);
+% RcDorLat1 = out.RcDorLat1((RearStart:RearStop),:);
+% RcDorLat2 = out.RcDorLat2((RearStart:RearStop),:);
+% RcDist = out.RcDist((RearStart:RearStop),:);
+% RcVenLat1 = out.RcVenLat1((RearStart:RearStop),:);
+% RcVenLat2 = out.RcVenLat2((RearStart:RearStop),:);
+% RcVenMed1 = out.RcVenMed1((RearStart:RearStop),:);
+% RcVenMed2 = out.RcVenMed2((RearStart:RearStop),:);
+% RiDorMed1 = out.RiDorMed1((RearStart:RearStop),:);%%%%%
+% RiDorMed2 = out.RiDorMed2((RearStart:RearStop),:);
+% RiDorLat1 = out.RiDorLat1((RearStart:RearStop),:);
+% RiDorLat2 = out.RiDorLat2((RearStart:RearStop),:);
+% RiDist = out.RiDist((RearStart:RearStop),:);
+% RiVenLat1 = out.RiVenLat1((RearStart:RearStop),:);
+% RiVenLat2 = out.RiVenLat2((RearStart:RearStop),:);
+% RiVenMed1 = out.RiVenMed1((RearStart:RearStop),:);
+% RiVenMed2 = out.RiVenMed2((RearStart:RearStop),:);
+% RiThetaAverage = out.RiThetaAverage((RearStart:RearStop),:);
 %%%%%%    End of clipping section     %%%%%%
 
 t=1:length(mouseCOMxy);
-t=t/framerate; % t is in seconds
-LeftCamtime = linspace(t(1),t(end),length(LcDorMed1));
-RightCamtime = linspace(t(1),t(end),length(RcDorMed2));
+% t=t/framerate; % t is in seconds
+% LeftCamtime = linspace(t(1),t(end),length(LcDorMed));
+% RightCamtime = linspace(t(1),t(end),length(RcDorMed1));
 
 figure
 plot(mouseCOMxy(:,1), mouseCOMxy(:,2))
@@ -298,10 +290,6 @@ if exist('analysis_plots.ps')==2
 else
     print -dpsc2 'analysis_plots.ps' -bestfit
 end
-
-% also print to pdf -jls
-
-
 line(xlim, [0 0], 'linestyle', '--')
 
 %animate the mouse and cricket, along with angles, write to video
@@ -352,7 +340,6 @@ firstContact = find(range<10,1); %finds first frame where mouse and cricket are 
 %frame number is defined as the framenumber after the 'startframe' defined
 %earlier in this script
 
-
 %mouse speed
 speed=sqrt(diff(smouseCOMx).^2 + diff(smouseCOMx).^2);
 [b,a]=butter(3, .5);
@@ -397,28 +384,24 @@ try
 end
 
 % Ear plots, added by Nick:
-subplot(2,1,2);
-hold on;
+% subplot(2,1,2);
+% hold on;
 % plot(LeftCamtime,LcVenMed(:,1),'g-')
 % plot(LeftCamtime,LcVenLat(:,1),'g-')
 % plot(LeftCamtime,LcDorMed(:,1),'g-')
 % plot(LeftCamtime,LcDorLat(:,1),'g-')
 % plot(LeftCamtime,LcDist(:,1),'g-')
-% plot(LeftCamtime,LcVenMed(:,2),'g-')
-% plot(LeftCamtime,LcVenLat(:,2),'g-')
-% plot(LeftCamtime,LcDorMed(:,2),'g-')
-% plot(LeftCamtime,LcDorLat(:,2),'g-')
-% plot(LeftCamtime,LcDist(:,2),'g-')
-plot(LeftCamtime,LiVenMed1(:,1),'g--')
-plot(LeftCamtime,LiVenMed2(:,1),'g--')
-plot(LeftCamtime,LiVenLat1(:,1),'g--')
-plot(LeftCamtime,LiVenLat2(:,1),'g--')
-plot(LeftCamtime,LiDorMed1(:,1),'g--')
-plot(LeftCamtime,LiDorMed2(:,1),'g--')
-plot(LeftCamtime,LiDorLat1(:,1),'g--')
-plot(LeftCamtime,LiDorLat2(:,1),'g--')
-plot(LeftCamtime,LiDist(:,1),'g--')
-plot(LeftCamtime,LiThetaAverage,'g-','LineWidth',4)
+% % plot(LeftCamtime,LcVenMed(:,2),'g-')
+% % plot(LeftCamtime,LcVenLat(:,2),'g-')
+% % plot(LeftCamtime,LcDorMed(:,2),'g-')
+% % plot(LeftCamtime,LcDorLat(:,2),'g-')
+% % plot(LeftCamtime,LcDist(:,2),'g-')
+% plot(LeftCamtime,LiVenMed(:,1),'g--')
+% plot(LeftCamtime,LiVenLat(:,1),'g--')
+% plot(LeftCamtime,LiDorMed(:,1),'g--')
+% plot(LeftCamtime,LiDorLat(:,1),'g--')
+% plot(LeftCamtime,LiDist(:,1),'g--')
+% plot(LeftCamtime,LiThetaAverage,'g-','LineWidth',4)
 % plot(LeftCamtime,LiVenMed(:,2),'g-')
 % plot(LeftCamtime,LiVenLat(:,2),'g-')
 % plot(LeftCamtime,LiDorMed(:,2),'g-')
@@ -436,40 +419,40 @@ plot(LeftCamtime,LiThetaAverage,'g-','LineWidth',4)
 % plot(RightCamtime,RcDorLat(:,1),'r-')
 % plot(RightCamtime,RcDist(:,1),'r-')
 % plot(RightCamtime,RcVenMed(:,2),'r-')
-% plot(RightCamtime,RcVenLat(:,2),'r-')
-% plot(RightCamtime,RcDorMed(:,2),'r-')
-% plot(RightCamtime,RcDorLat(:,2),'r-')
-% plot(RightCamtime,RcDist(:,2),'r-')
-plot(RightCamtime,RiDorMed1(:,1),'r--')
-plot(RightCamtime,RiDorMed2(:,1),'r--')
-plot(RightCamtime,RiDorLat1(:,1),'r--')
-plot(RightCamtime,RiDorLat2(:,1),'r--')
-plot(RightCamtime,RiDist(:,1),'r--')
-plot(RightCamtime,RiVenLat1(:,1),'r--')
-plot(RightCamtime,RiVenLat2(:,1),'r--')
-plot(RightCamtime,RiVenMed1(:,1),'r--')
-plot(RightCamtime,RiVenMed2(:,1),'r--')
-plot(RightCamtime,RiThetaAverage,'r-','LineWidth',4)
-midline = ones(length(RightCamtime));
-midline = midline*(pi/2);
-plot(RightCamtime,midline,'k-','LineWidth',4);
-
-ylim([0,pi]);
-yticks([0 pi/2 pi])
-yticklabels({'0','pi/2','pi'});
-ylabel('(L-ear)ANTERIOR <-- POSTERIOR --> ANTERIOR(R-ear)');
+% % plot(RightCamtime,RcVenLat(:,2),'r-')
+% % plot(RightCamtime,RcDorMed(:,2),'r-')
+% % plot(RightCamtime,RcDorLat(:,2),'r-')
+% % plot(RightCamtime,RcDist(:,2),'r-')
+% plot(RightCamtime,RiDorMed1(:,1),'r--')
+% plot(RightCamtime,RiDorMed2(:,1),'r--')
+% plot(RightCamtime,RiDorLat1(:,1),'r--')
+% plot(RightCamtime,RiDorLat2(:,1),'r--')
+% plot(RightCamtime,RiDist(:,1),'r--')
+% plot(RightCamtime,RiVenLat1(:,1),'r--')
+% plot(RightCamtime,RiVenLat2(:,1),'r--')
+% plot(RightCamtime,RiVenMed1(:,1),'r--')
+% plot(RightCamtime,RiVenMed2(:,1),'r--')
+% plot(RightCamtime,RiThetaAverage,'r-','LineWidth',4)
+% midline = ones(length(RightCamtime));
+% midline = midline*(pi/2);
+% plot(RightCamtime,midline,'k-','LineWidth',4);
+% 
+% ylim([0,pi]);
+% yticks([0 pi/2 pi])
+% yticklabels({'0','pi/2','pi'});
+% ylabel('(L-ear)ANTERIOR <-- POSTERIOR --> ANTERIOR(R-ear)');
 
 
 %yyaxis right
 % plot(t,mouse_bearing,'-','LineWidth',3);
-deltaAzimuth = nan;
-for i = 2:(length(t)-1)
-    newdelta = mouse_bearing_unwrapped(i+1)-mouse_bearing_unwrapped(i-1);
-    deltaAzimuth = [deltaAzimuth;newdelta];
-end
-deltaAzimuth = [deltaAzimuth;nan];
-plot(t,pi/2+deg2rad(deltaAzimuth),'-','LineWidth',3);
-ylabel('Slope of Absolute Azimuth');
+% deltaAzimuth = nan;
+% for i = 2:(length(t)-1)
+%     newdelta = mouse_bearing_unwrapped(i+1)-mouse_bearing_unwrapped(i-1);
+%     deltaAzimuth = [deltaAzimuth;newdelta];
+% end
+% deltaAzimuth = [deltaAzimuth;nan];
+% plot(t,pi/2+deg2rad(deltaAzimuth),'-','LineWidth',3);
+% ylabel('Slope of Absolute Azimuth');
 % set(gca,'YDir','reverse');
 % ylabel('anterior -> posterior')
 % plot(RightCamtime,RiDorMed1(:,2),'r-')
@@ -481,35 +464,35 @@ ylabel('Slope of Absolute Azimuth');
 % plot(RightCamtime,RiVenLat2(:,2),'r-')
 % plot(RightCamtime,RiVenMed1(:,2),'r-')
 % plot(RightCamtime,RiVenMed2(:,2),'r-')
-
-% title('RightEarTracks')
-title('EarTracks')
-hold off;
+% 
+% % title('RightEarTracks')
+% title('EarTracks')
+% hold off;
 %end of example addition
-
-%plot cross-correlations of ear motion and mouse steering
-%      resample DeltaAzimuth (in skycam time) into earcam time
-deltaAzimuthI=resample(deltaAzimuth, length(RightCamtime),length(t));
-deltaAzimuthI(find(isnan(deltaAzimuthI)))=0; %remove nans because xcorr can't handle nans
-deltaAzimuthIr=deg2rad(deltaAzimuthI); %convert to radians
-[cRAz, lags]=xcov(RiThetaAverage, deltaAzimuthIr, 128);
-[cLAz, lags]=xcov(LiThetaAverage, deltaAzimuthIr, 128);
-[c, lags]=xcov(LiThetaAverage, RiThetaAverage, 128);
-figure
-plot(lags, cRAz,'r', lags, cLAz,'g', lags, c, 'k')
-legend('Right ear -> deltaAzimuth', 'Left ear -> deltaAzimuth', 'Left ear -> Right ear');
-xlabel('cross-covariance in frames')
-grid on
-
-%plot cross-correlations of cricket speed and ear motion 
- cspeedI=resample(cspeed, length(RightCamtime),length(t));
-[cLE_cspeed, lags]=xcov( cspeedI, LiThetaAverage, 128);
-[cRE_cspeed, lags]=xcov( cspeedI, RiThetaAverage, 128);
-figure
-plot(lags, cLE_cspeed,'g',lags, cRE_cspeed,'r')
-legend( 'Left ear <- cricket speed', 'Right ear <- cricket speed')
-xlabel('cross-covariance in frames')
-grid on
+% 
+% %plot cross-correlations of ear motion and mouse steering
+% %      resample DeltaAzimuth (in skycam time) into earcam time
+% deltaAzimuthI=resample(deltaAzimuth, length(RightCamtime),length(t));
+% deltaAzimuthI(find(isnan(deltaAzimuthI)))=0; %remove nans because xcorr can't handle nans
+% deltaAzimuthIr=deg2rad(deltaAzimuthI); %convert to radians
+% [cRAz, lags]=xcov(RiThetaAverage, deltaAzimuthIr, 128);
+% [cLAz, lags]=xcov(LiThetaAverage, deltaAzimuthIr, 128);
+% [c, lags]=xcov(LiThetaAverage, RiThetaAverage, 128);
+% figure
+% plot(lags, cRAz,'r', lags, cLAz,'g', lags, c, 'k')
+% legend('Right ear -> deltaAzimuth', 'Left ear -> deltaAzimuth', 'Left ear -> Right ear');
+% xlabel('cross-covariance in frames')
+% grid on
+% 
+% %plot cross-correlations of cricket speed and ear motion 
+%  cspeedI=resample(cspeed, length(RightCamtime),length(t));
+% [cLE_cspeed, lags]=xcov( cspeedI, LiThetaAverage, 128);
+% [cRE_cspeed, lags]=xcov( cspeedI, RiThetaAverage, 128);
+% figure
+% plot(lags, cLE_cspeed,'g',lags, cRE_cspeed,'r')
+% legend( 'Left ear <- cricket speed', 'Right ear <- cricket speed')
+% xlabel('cross-covariance in frames')
+% grid on
 
 
 

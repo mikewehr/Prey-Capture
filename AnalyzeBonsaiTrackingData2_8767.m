@@ -1,4 +1,4 @@
-function AnalyzeBonsaiTrackingData2(varargin)
+function AnalyzeBonsaiTrackingData2_8767(varargin)
 %this function loads tracking data from indivual sessions, computes several
 %things like speed, range, azimuth, creates several plots and prints them
 %to a postscript file, and saves the output to a groupdata file.
@@ -33,7 +33,7 @@ if ismac
     
 end
 
-out=LoadDeepCutTracks2();
+out=LoadDeepCutTracks2_8767();
 
 mouseCOMxy=out.mouseCOMxy;
 mouseNosexy=out.mouseNosexy;
@@ -53,24 +53,24 @@ LearStop = find(Lear.skysync==stop_frame,1);
 if isempty(LearStop)
     LearStop = find(Lear.skysync==stop_frame-1,1);
 end
-LcDorMed1 = out.LcDorMed1((LearStart:LearStop),:);
-LcDorMed2 = out.LcDorMed2((LearStart:LearStop),:);
-LcDorLat1 = out.LcDorLat1((LearStart:LearStop),:);
-LcDorLat2 = out.LcDorLat2((LearStart:LearStop),:);
+LcDorMed = out.LcDorMed((LearStart:LearStop),:);
+
+LcDorLat = out.LcDorLat((LearStart:LearStop),:);
+
 LcDist = out.LcDist((LearStart:LearStop),:);
-LcVenMed1 = out.LcVenMed1((LearStart:LearStop),:);
-LcVenMed2 = out.LcVenMed2((LearStart:LearStop),:);
-LcVenLat1 = out.LcVenLat1((LearStart:LearStop),:);
-LcVenLat2 = out.LcVenLat2((LearStart:LearStop),:);
-LiDorMed1 = out.LiDorMed1((LearStart:LearStop),:);
-LiDorMed2 = out.LiDorMed2((LearStart:LearStop),:);
-LiDorLat1 = out.LiDorLat1((LearStart:LearStop),:);
-LiDorLat2 = out.LiDorLat2((LearStart:LearStop),:);
+
+LcVenMed = out.LcVenMed((LearStart:LearStop),:);
+LcVenLat = out.LcVenLat((LearStart:LearStop),:);
+
+LiDorMed = out.LiDorMed((LearStart:LearStop),:);
+
+LiDorLat = out.LiDorLat((LearStart:LearStop),:);
+
 LiDist = out.LiDist((LearStart:LearStop),:);
-LiVenLat1 = out.LiVenLat1((LearStart:LearStop),:);
-LiVenLat2 = out.LiVenLat2((LearStart:LearStop),:);
-LiVenMed1 = out.LiVenMed1((LearStart:LearStop),:);
-LiVenMed2 = out.LiVenMed2((LearStart:LearStop),:);
+LiVenLat = out.LiVenLat((LearStart:LearStop),:);
+
+LiVenMed = out.LiVenMed((LearStart:LearStop),:);
+
 LiThetaAverage = out.LiThetaAverage((LearStart:LearStop),:);
 %%%%%%    Clip RearTracking from start:stop     %%%%%%
 RearStart = find(Lear.skysync==start_frame,1);
@@ -104,7 +104,7 @@ RiThetaAverage = out.RiThetaAverage((RearStart:RearStop),:);
 
 t=1:length(mouseCOMxy);
 t=t/framerate; % t is in seconds
-LeftCamtime = linspace(t(1),t(end),length(LcDorMed1));
+LeftCamtime = linspace(t(1),t(end),length(LcDorMed));
 RightCamtime = linspace(t(1),t(end),length(RcDorMed2));
 
 figure
@@ -298,10 +298,6 @@ if exist('analysis_plots.ps')==2
 else
     print -dpsc2 'analysis_plots.ps' -bestfit
 end
-
-% also print to pdf -jls
-
-
 line(xlim, [0 0], 'linestyle', '--')
 
 %animate the mouse and cricket, along with angles, write to video
@@ -409,14 +405,14 @@ hold on;
 % plot(LeftCamtime,LcDorMed(:,2),'g-')
 % plot(LeftCamtime,LcDorLat(:,2),'g-')
 % plot(LeftCamtime,LcDist(:,2),'g-')
-plot(LeftCamtime,LiVenMed1(:,1),'g--')
-plot(LeftCamtime,LiVenMed2(:,1),'g--')
-plot(LeftCamtime,LiVenLat1(:,1),'g--')
-plot(LeftCamtime,LiVenLat2(:,1),'g--')
-plot(LeftCamtime,LiDorMed1(:,1),'g--')
-plot(LeftCamtime,LiDorMed2(:,1),'g--')
-plot(LeftCamtime,LiDorLat1(:,1),'g--')
-plot(LeftCamtime,LiDorLat2(:,1),'g--')
+plot(LeftCamtime,LiVenMed(:,1),'g--')
+
+plot(LeftCamtime,LiVenLat(:,1),'g--')
+
+plot(LeftCamtime,LiDorMed(:,1),'g--')
+
+plot(LeftCamtime,LiDorLat(:,1),'g--')
+
 plot(LeftCamtime,LiDist(:,1),'g--')
 plot(LeftCamtime,LiThetaAverage,'g-','LineWidth',4)
 % plot(LeftCamtime,LiVenMed(:,2),'g-')

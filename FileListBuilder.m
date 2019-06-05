@@ -42,19 +42,19 @@ out = mfilename;
 
 function CreateNewCellList
 global P
-[fname, path] = uiputfile('*.txt', 'Select cell list');
+[fname, path] = uiputfile('*.txt', 'name your new file list');
 if fname
     P.TargetCellList=fullfile(path, fname);
-    set(P.TargetCellListDisplay, 'string', {'cell list:',path, fname});
+    set(P.TargetCellListDisplay, 'string', {'file list:',path, fname});
     set([P.BrowseAndAddh P.AddCurrentDirh], 'enable', 'on')
 end
 
 function SelectExistingCellList
 global P
-[fname, path] = uigetfile('*.txt', 'Select cell list');
+[fname, path] = uigetfile('*.txt', 'Select file list');
 if fname
     P.TargetCellList=fullfile(path, fname);
-    set(P.TargetCellListDisplay, 'string', {'cell list:',path, fname});
+    set(P.TargetCellListDisplay, 'string', {'file list:',path, fname});
     set([P.BrowseAndAddh P.AddCurrentDirh], 'enable', 'on')
 end
 
@@ -79,7 +79,7 @@ if length(d)<=listsize
     [selection, ok, ClustQual, PVcell]=myCellListDlg(d);
 else %break up into chunks
     selection=[];  ClustQual=[]; PVcell=[];
-    uiwait(msgbox(sprintf('there are %d cells in this directory, so breaking into %d chunks of %d', length(d), ceil(length(d)/listsize), listsize), 'modal'));
+    uiwait(msgbox(sprintf('there are %d files in this directory, so breaking into %d chunks of %d', length(d), ceil(length(d)/listsize), listsize), 'modal'));
     for i=1:ceil(length(d)/listsize)
         range=1+(i-1)*listsize:i*listsize;
         range=range(range<length(d));
@@ -122,7 +122,7 @@ for s=1:length(d)
     end
     cd(wd)
 end
-response=questdlg(str, 'Write selected cells to file?', 'Write', 'Cancel', 'Write');
+response=questdlg(str, 'Write selected files to list?', 'Write', 'Cancel', 'Write');
 switch response
     case 'Write'
         fid=fopen(P.TargetCellList, 'a'); %absolute path
@@ -141,8 +141,8 @@ end
 fig = figure;
 P.fig=fig;
 set(fig,'visible','off');
-set(fig,'visible','off','numbertitle','off','name','cell list builder',...
-    'doublebuffer','on','menubar','none','closerequestfcn','CellListBuilder(''Close'')')
+set(fig,'visible','off','numbertitle','off','name','file list builder',...
+    'doublebuffer','on','menubar','none','closerequestfcn','FileListBuilder(''Close'')')
 height=220; width=350; e=2; H=e;
 w=200; h=25;
 set(fig,'pos',[1000 800         width         height],'visible','on');
@@ -156,14 +156,14 @@ P.TargetCellListDisplay= uicontrol('parent',fig,'string','','tag','TargetCellLis
 
 %CreateNewCellList button
 H=H+2*h+e;
-uicontrol('parent',fig,'string','Create New Cell List','tag','CreateNewCellList','units','pixels',...
+uicontrol('parent',fig,'string','Create New File List','tag','CreateNewCellList','units','pixels',...
     'position',[e H w h],'enable','on',...
     'fontweight','bold',...
     'style','pushbutton','callback',[me ';']);
 
 %SelectExistingCellList button
 H=H+1*h+e;
-uicontrol('parent',fig,'string','Select Existing Cell List','tag','SelectExistingCellList','units','pixels',...
+uicontrol('parent',fig,'string','Select Existing File List','tag','SelectExistingCellList','units','pixels',...
     'position',[e H w h],'enable','on',...
     'fontweight','bold',...
     'style','pushbutton','callback',[me ';']);
@@ -247,7 +247,7 @@ col4width=50; %cluster quality numeric indicator
 col5width=50; %pv cell checkbox
 sliderwidth=col3width;
 
-uicontrol('style', 'text', 'pos', [0, top-linesize, col1width, linesize], 'string', 'cell', ...
+uicontrol('style', 'text', 'pos', [0, top-linesize, col1width, linesize], 'string', 'file', ...
     'horizontalalignment', 'center', 'fontsize', fontsize)
 uicontrol('style', 'text', 'pos', [col1width, top-linesize, col2width, linesize], 'string', 'include?', ...
     'horizontalalignment', 'center', 'fontsize', fontsize)

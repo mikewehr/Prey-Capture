@@ -1,4 +1,4 @@
-function out = LoadDeepCutTracks2(varargin)
+function out = LoadDeepCutTracks2_8767(varargin)
 
 temp = dir('Behavior*.mat');
 load(temp.name);
@@ -9,7 +9,7 @@ else
     NoEars = 0;
 end
 
-threshold = 0.9;
+threshold = 0.8;
 
 %%%%%%% Skytracking/Cleaning %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     [snout] = clean(SkyTrack.Nose,threshold);
@@ -59,15 +59,11 @@ threshold = 0.9;
 %%%%%%% Eartracking/Cleaning %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if NoEars == 0
     %clean:
-    LcDorMed1 = clean(LearTrack.DorMed1, threshold);
-    LcDorMed2 = clean(LearTrack.DorMed2, threshold);%AKA: 'Left,cleaned,DorMed
-    LcDorLat1 = clean(LearTrack.DorLat1, threshold);
-    LcDorLat2 = clean(LearTrack.DorLat2, threshold);
+    LcDorMed = clean(LearTrack.DorMed, threshold);%AKA: 'Left,cleaned,DorMed
+    LcDorLat = clean(LearTrack.DorLat, threshold);
     LcDist = clean(LearTrack.Dist, threshold);      
-    LcVenMed1 = clean(LearTrack.VenMed1, threshold);
-    LcVenMed2 = clean(LearTrack.VenMed2, threshold);
-    LcVenLat1 = clean(LearTrack.VenLat1, threshold);
-    LcVenLat2 = clean(LearTrack.VenLat2, threshold);
+    LcVenMed = clean(LearTrack.VenMed, threshold);
+    LcVenLat = clean(LearTrack.VenLat, threshold);
     
     RcDorMed1 = clean(RearTrack.DorMed1, threshold);  %AKA: 'Right,cleaned,DorMed
     RcDorMed2 = clean(RearTrack.DorMed2, threshold);
@@ -81,24 +77,17 @@ if NoEars == 0
     
     
     %interpolate:
-    LiDorMed1 = interpolating(LcDorMed1, 1);
-    LiDorMed1 = interpolating(LiDorMed1, 2);%AKA: 'Left,interpolated,DorMed
-    LiDorMed2 = interpolating(LcDorMed2, 1);
-    LiDorMed2 = interpolating(LiDorMed2, 2);
-    LiDorLat1 = interpolating(LcDorLat1, 1);
-    LiDorLat1 = interpolating(LiDorLat1, 2);
-    LiDorLat2 = interpolating(LcDorLat2, 1);
-    LiDorLat2 = interpolating(LiDorLat2, 2);
+    LiDorMed = interpolating(LcDorMed, 1);
+    LiDorMed = interpolating(LiDorMed, 2);%AKA: 'Left,interpolated,DorMed
+    LiDorLat = interpolating(LcDorLat, 1);
+    LiDorLat = interpolating(LiDorLat, 2);
     LiDist = interpolating(LcDist, 1);              
     LiDist = interpolating(LiDist, 2);
-    LiVenMed1 = interpolating(LcVenMed1, 1);
-    LiVenMed1 = interpolating(LiVenMed1, 2);
-    LiVenMed2 = interpolating(LcVenMed2, 1);
-    LiVenMed2 = interpolating(LiVenMed2, 2);
-    LiVenLat1 = interpolating(LcVenLat1, 1);
-    LiVenLat1 = interpolating(LiVenLat1, 2);
-    LiVenLat2 = interpolating(LcVenLat2, 1);
-    LiVenLat2 = interpolating(LiVenLat2, 2);
+    LiVenMed = interpolating(LcVenMed, 1);
+    LiVenMed = interpolating(LiVenMed, 2);
+    LiVenLat = interpolating(LcVenLat, 1);
+    LiVenLat = interpolating(LiVenLat, 2);
+
     
     RiDorMed1 = interpolating(RcDorMed1, 1);          %AKA: 'Right,interpolated,DorMed
     RiDorMed1 = interpolating(RiDorMed1, 2);
@@ -121,18 +110,14 @@ if NoEars == 0
     
     %transform to polar coordinates
     NewOrigin = [1,959]; %origin for left ear
-    LiDorMed1 = MakePolar(NewOrigin,LiDorMed1);
-    LiDorMed2 = MakePolar(NewOrigin,LiDorMed2);
-    LiDorLat1 = MakePolar(NewOrigin,LiDorLat1);
-    LiDorLat2 = MakePolar(NewOrigin,LiDorLat2);
+    LiDorMed = MakePolar(NewOrigin,LiDorMed);
+    LiDorLat = MakePolar(NewOrigin,LiDorLat);
     LiDist = MakePolar(NewOrigin,LiDist);
-    LiVenMed1 = MakePolar(NewOrigin,LiVenMed1);
-    LiVenMed2 = MakePolar(NewOrigin,LiVenMed2);
-    LiVenLat1 = MakePolar(NewOrigin,LiVenLat1);
-    LiVenLat2 = MakePolar(NewOrigin,LiVenLat2);
-   
-    for i = 1:length(LiDorMed1) %make polar average
-        frame = [LiDorMed1(i,1),LiDorMed2(i,1),LiDorLat1(i,1), LiDorLat2(i,1),LiDist(i,1),LiVenLat1(i,1), LiVenLat2(i,1),LiVenMed1(i,1), LiVenMed2(i,1)];
+    LiVenMed = MakePolar(NewOrigin,LiVenMed);
+    LiVenLat = MakePolar(NewOrigin,LiVenLat);
+  
+    for i = 1:length(LiDorMed) %make polar average
+        frame = [LiDorMed(i,1),LiDorLat(i,1),LiDist(i,1),LiVenLat(i,1),LiVenMed(i,1)];
         LiThetaAverage(i) = nanmean(frame);
     end
 
@@ -152,24 +137,16 @@ if NoEars == 0
     end
     
     %put into 'out' structure:
-    out.LcDorMed1=LcDorMed1;
-    out.LcDorMed2=LcDorMed2;
-    out.LcDorLat1=LcDorLat1;
-    out.LcDorLat2=LcDorLat2;
+    out.LcDorMed=LcDorMed;
+    out.LcDorLat=LcDorLat;
     out.LcDist=LcDist;
-    out.LcVenMed1=LcVenMed1;
-    out.LcVenMed2=LcVenMed2;
-    out.LcVenLat1=LcVenLat1;
-    out.LcVenLat2=LcVenLat2;
-    out.LiDorMed1=LiDorMed1;
-    out.LiDorMed2=LiDorMed2;
-    out.LiDorLat1=LiDorLat1;
-    out.LiDorLat2=LiDorLat2;
+    out.LcVenMed=LcVenMed;
+    out.LcVenLat=LcVenLat;
+    out.LiDorMed=LiDorMed;
+    out.LiDorLat=LiDorLat;
     out.LiDist=LiDist;
-    out.LiVenMed1=LiVenMed1;
-    out.LiVenMed2=LiVenMed2;
-    out.LiVenLat1=LiVenLat1;
-    out.LiVenLat2=LiVenLat2;
+    out.LiVenMed=LiVenMed;
+    out.LiVenLat=LiVenLat;
     out.LiThetaAverage = LiThetaAverage';
     
     out.RcDorMed1=RcDorMed1;
