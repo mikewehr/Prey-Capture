@@ -8,7 +8,9 @@ groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
 %groupdatadir= 'D:\lab\Data\826 mice bonsai';
 
 %mount wehrrig4
-%system('mount_smbfs smb://wehrrig4/C /Volumes/C')
+mkdir /Volumes/wehrrig4
+system('mount_smbfs smb://wehrrig4/C /Volumes/wehrrig4')
+cd /Volumes/wehrrig4
 close all
 
 groupdatafilename='preycapture_groupdata';
