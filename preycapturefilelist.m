@@ -1,5 +1,5 @@
 function files=preycapturefilelist
-%
+% crickets with legs?
 
 i=0;
 
@@ -82,10 +82,12 @@ i=i+1;
 files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-27T13_55_21.txt';
 files(i).start_frame=29;
 files(i).stop_frame=[1528]; %use [] to use entire video
-i=i+1;
-files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-27T13_57_35.txt';
-files(i).start_frame=33;
-files(i).stop_frame=[149]; %use [] to use entire video
+
+% i=i+1;
+% files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-27T13_57_35.txt';
+% files(i).start_frame=33;
+% files(i).stop_frame=[149]; %use [] to use entire video
+
 i=i+1;
 files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\lb\New folder\data2017-10-27T13_59_24.txt';
 files(i).start_frame=37;
@@ -504,6 +506,7 @@ files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\RT\New folder\dat
 files(i).start_frame=39;
 files(i).stop_frame=[124]; %use [] to use entire video
 
+%GOT TO HERE - Danny
 
 i=i+1;
 files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\Cage5\TT\New folder\data2017-10-05T12_26_34.txt';
@@ -849,3 +852,84 @@ i=i+1;
 files(i).datapath= 'C:\Users\lab\Desktop\826 mice bonsai\cage 6\RT\New folder\data2017-11-03T14_34_27.txt';
 files(i).start_frame=33;
 files(i).stop_frame=[228]; %use [] to use entire video
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

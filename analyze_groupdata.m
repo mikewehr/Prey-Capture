@@ -4,14 +4,20 @@
 
 clear
 %groupdatadir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
-groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
+%groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
 %groupdatadir= 'D:\lab\Data\826 mice bonsai';
+groupdatadir= 'D:\lab\Data\lidocaine_groupdata';
+%groupdatadir= 'D:\lab\Data\muscimol_groupdata';
+%groupdatadir= 'D:\lab\Data\unilateral_groupdata';
+
 
 %mount wehrrig4
 %system('mount_smbfs smb://wehrrig4/C /Volumes/C')
 close all
 
-groupdatafilename='preycapture_groupdata';
+% groupdatafilename='preycapture_groupdata_lidocaine';
+groupdatafilename='preycapture_groupdata_saline';
+%groupdatafilename='preycapture_groupdata_muscimol';
 
 %adjust filenames to work on a mac
 if ismac
@@ -23,6 +29,8 @@ end
 
 cd(groupdatadir)
 load(groupdatafilename)
+groupdata=groupdata_all; %convert for deep lab cut 
+
 numfiles=length(groupdata);
 fprintf('\nanalyzing %d files', numfiles)
 
@@ -46,6 +54,7 @@ Numframes=[];
 
 for i=1:length(groupdata)
     Numframes(i)=groupdata(i).numframes;
+    FirstContact(i)=groupdata(i).firstcontact_frame/framerate; %time to first contact in seconds
 end
 maxnumframes=max(Numframes);
 
@@ -153,6 +162,7 @@ for i=1:length(groupdata)
     XC3(i,:)=xc3;
     
 end
+fprintf('\ndone accumulating groupdata');
 
 lag=1000*lag/framerate;
 %plot average xcorrs of mouse speed, cricket speed, and range
@@ -162,7 +172,7 @@ semxc2=std(XC2)./sqrt(numfiles);
 semxc1_th=nanstd(XC1_th)./sqrt(numfiles);
 semxc1_rth=nanstd(XC1_rth)./sqrt(numfiles);
 semxc2_th=nanstd(XC2_th)./sqrt(numfiles);
-semxc3=std(XC3)./sqrt(numfiles);
+semxc3=nanstd(XC3)./sqrt(numfiles);
 
 p=plot(0,0, 'b.', 0,0, 'c.', 0,0, 'k.',0,0, 'r.',0,0, 'm.', 0,0, 'g.') ;%dummy for legend
 set(p, 'markersize', 20)
@@ -170,17 +180,21 @@ legend('cricket speed -> mouse speed','cricket speed th -> mouse speed',...
     'cricket speed (range th) -> mouse speed (range th)',...
     'cricket speed -> range','cricket speed th -> range','mouse speed -> range', ...
     'location', 'SouthOutside')
-%set(p, 'vis', 'off')
+set(p, 'vis', 'off')
 
 shadedErrorBar(lag, mean(XC1), semxc1, 'lineprops', 'b', 'transparent', 1);
 shadedErrorBar(lag, nanmean(XC1_th), semxc1_th,'lineprops', 'c', 'transparent', 1);
 shadedErrorBar(lag, nanmean(XC1_rth), semxc1_rth,'lineprops', 'k', 'transparent', 1);
 shadedErrorBar(lag, mean(XC2), semxc2,'lineprops', 'r', 'transparent', 1);
 shadedErrorBar(lag, nanmean(XC2_th), semxc2_th,'lineprops', 'm', 'transparent', 1);
-shadedErrorBar(lag, mean(XC3), semxc3,'lineprops', 'g', 'transparent', 1);
+shadedErrorBar(lag, nanmean(XC3), semxc3,'lineprops', 'g', 'transparent', 1);
 grid on
 title('xcorr of mouse speed and cricket speed')
 xlabel('time lag, ms')
+legend('cricket speed -> mouse speed','cricket speed th -> mouse speed',...
+    'cricket speed (range th) -> mouse speed (range th)',...
+    'cricket speed -> range','cricket speed th -> range','mouse speed -> range', ...
+    'location', 'SouthOutside')
 
 
 %2-D histogram of azimuth vs range
@@ -301,9 +315,17 @@ title(sprintf('Time to capture, median=%.1f s +- %.1f s', median(Numframes)/fram
 xlabel('time to capture, s')
 ylabel('count')
 
+%%%%
+figure
+hist(FirstContact, 50)
+title(sprintf('time to first contact, median=%.1f s +- %.1f s', median(FirstContact), std(FirstContact)/sqrt(numfiles)))
+xlabel('time to first contact, s')
+ylabel('count')
+
 
 %%%%%%%%%%%%%%%%%%
 % look for motifs
+fprintf('\nmotifs');
 
 %motifs are composed of elements (events). We can first identify the
 %events, and then look for combinations of them.
@@ -361,26 +383,26 @@ for j=cspeed_offsets'
 end
 
 figure
-shadedErrorBar(winstart:winstop, mean(Az_cspeedonset), nanstd(Az_cspeedonset), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(winstart:winstop, nanmean(Az_cspeedonset), nanstd(Az_cspeedonset), 'lineprops', 'b', 'transparent', 1);
 xlabel('frames relative to cricket starts moving')
 ylabel('Azimuth')
 grid on
 
 figure
-shadedErrorBar(winstart:winstop, mean(Range_cspeedonset), nanstd(Range_cspeedonset), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(winstart:winstop, nanmean(Range_cspeedonset), nanstd(Range_cspeedonset), 'lineprops', 'b', 'transparent', 1);
 xlabel('frames relative to cricket starts moving')
 ylabel('Range, cm')
 grid on
 
 
 figure
-shadedErrorBar(winstart:winstop, mean(Az_cspeedoffset), nanstd(Az_cspeedoffset), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(winstart:winstop, nanmean(Az_cspeedoffset), nanstd(Az_cspeedoffset), 'lineprops', 'b', 'transparent', 1);
 xlabel('frames relative to cricket stops moving')
 ylabel('Azimuth')
 grid on
 
 figure
-shadedErrorBar(winstart:winstop, mean(Range_cspeedoffset), nanstd(Range_cspeedoffset), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(winstart:winstop, nanmean(Range_cspeedoffset), nanstd(Range_cspeedoffset), 'lineprops', 'b', 'transparent', 1);
 xlabel('frames relative to cricket stops moving')
 ylabel('Range, cm')
 grid on
@@ -391,6 +413,7 @@ grid on
 % cricket goes from still to moving.
 % mouse changes direction towards cricket
 % this starts driving range down.
+fprintf('\ntarget acquisition');
 
 % let's say he needs to have been stopped for 1 second
 still_dur_s=1; %how long in seconds the cricket needs to have been stopped
@@ -427,16 +450,18 @@ for j=new_cspeed_onsets %frames
     AZ(k,:)=az;
     RG(k,:)=rg;
     
-    figure(fig)
-    hold on
-    plot((-20:50), CSpeed(j-20:j+50), 'c')
-    plot((-20:50), Speed(j-20:j+50), 'r')
-    %     plot((-20:50), Azimuth(j-20:j+50), 'm')
-    plot((-20:50), Range(j-20:j+50), 'g')
-    line([1 1], ylim, 'color', 'g') %onset
-    %     plot((0:response_win_frames), az, 'm', 'linewidth', 2)
-    plot((0:response_win_frames), rg, 'g', 'linewidth', 2)
-    legend('crcket speed', 'mouse speed', 'azimuth', 'range','cricket starts moving', 'az' ,'rg')
+    if j>20
+        figure(fig)
+        hold on
+        plot((-20:50), CSpeed(j-20:j+50), 'c')
+        plot((-20:50), Speed(j-20:j+50), 'r')
+             plot((-20:50), Azimuth(j-20:j+50), 'm')
+        plot((-20:50), Range(j-20:j+50), 'g')
+        line([1 1], ylim, 'color', 'g') %onset
+             plot((0:response_win_frames), az, 'm', 'linewidth', 2)
+        plot((0:response_win_frames), rg, 'g', 'linewidth', 2)
+       % legend('cricket speed', 'mouse speed', 'azimuth', 'range','cricket starts moving', 'az' ,'rg')
+    end
     
     x=0:response_win_frames;
     X(:,1)=x;
@@ -454,17 +479,20 @@ for j=new_cspeed_onsets %frames
     
     
 end
-
+ legend('cricket speed', 'mouse speed', 'azimuth', 'range','cricket starts moving', 'az' ,'rg')
+ 
 %OK, TA contains the k indices that qualify as target acquisitions
 %what next to analyze behavior re: target acquisitions?
 
 %print group data plots to postscript file
-if 0    
-    delete groupdata_plots.ps
+if 1    
+    outpsfilename= sprintf('%s_plots.ps',groupdatafilename); 
+    delete (outpsfilename)
     for f=1:get(gcf, 'Number')
         figure(f)
-        print -dpsc2 -append groupdata_plots.ps
+        print ('-dpsc2', '-append', outpsfilename)
     end
+    fprintf('\nwrote %s in directory %s', outpsfilename, pwd)
 end
 
 
