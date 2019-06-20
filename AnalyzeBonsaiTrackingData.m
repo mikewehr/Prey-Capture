@@ -224,7 +224,9 @@ title('comparison of azimuth computations')
 legend('azimuth (COM-to-cricket)', 'azimuth (nose-to-cricket)', 'unwrapped (COM-to-cricket)', 'unwrapped (nose-to-cricket)', 'RelativeAzimuth')
 
 %azimuth3 is the best, so we keep that one and rename it azimuth
-azimuth=azimuth3;
+% azimuth=azimuth3;
+azimuth = RelativeAzimuth;
+
 
 
 
@@ -427,6 +429,8 @@ groupdata(i).smouseNosey=smouseNosey;
 groupdata(i).numframes=numframes;
 groupdata(i).start_frame=start_frame;
 groupdata(i).stop_frame=stop_frame;
+groupdata(i).datapath=datapath;
+groupdata(i).analysis_plots_dir=analysis_plots_dir;
 save(groupdatafilename, 'groupdata')
 
 
