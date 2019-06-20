@@ -35,7 +35,7 @@ fprintf('\nanalyzing %d files', numfiles)
 %groupdata is already trimmed to start_frame:stop_frame
 
 %plot
-for i=10
+for i=1:20
     figure
     hold on
     t=1:groupdata(i).numframes;
@@ -49,6 +49,10 @@ for i=10
     plot(contact, 0*contact, 'ro')
     ylim([0 1200])
 end
+
+return
+%if you want to watch the video, look for the appropriate file list in
+%readme
 
 TargetAcquisition=[];
 TargetLoss=[];
@@ -106,6 +110,8 @@ Contact
 Escape
 Kill
 
+keyboard
+
 % Hard-coded epochs from events
 Pursuit(TargetAcquisition(1):TargetLoss(1))=1;
     Search(1:TargetAcquisition(1))=1;
@@ -126,7 +132,26 @@ text(0, -200+20, 'Search')
 text(0, -150+20, 'Pursuit')
 text(0, -100+20, 'Capture')
 
-labelled_groupdata
+
+load('labelled_examples.mat')
+n=length(labelled_examples);
+
+labelled_examples(n+1)=groupdata(i);
+labelled_examples(n+1).Search=Search;
+labelled_examples(n+1).Pursuit=Pursuit;
+labelled_examples(n+1).Capture=Capture;
+labelled_examples(n+1).TargetAcquisition=TargetAcquisition;
+labelled_examples(n+1).TargetLoss=TargetLoss;
+labelled_examples(n+1).Contact=Contact;
+labelled_examples(n+1).Escape=Escape;
+labelled_examples(n+1).Kill=Kill;
+labelled_examples(n+1).groupdata_index=i;
+labelled_examples(n+1).groupdata_filename=groupdatafilename;
+
+save labelled_examples labelled_examples
+
+
+
     
 
 
