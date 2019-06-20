@@ -5,12 +5,16 @@
 clear
 %groupdatadir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
 groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
-%groupdatadir= 'D:\lab\Data\826 mice bonsai';
+%  groupdatadir= 'D:\lab\Data\826 mice bonsai';
 
 %mount wehrrig4
-mkdir /Volumes/wehrrig4
-system('mount_smbfs smb://wehrrig4/C /Volumes/wehrrig4')
-cd /Volumes/wehrrig4
+% mkdir /Volumes/wehrrig4C
+% system('mount_smbfs smb://wehrrig4/D /Volumes/wehrrig4C')
+% cd /Volumes/wehrrig4C
+
+mkdir /Volumes/wehrrig4D
+system('mount_smbfs smb://wehrrig4/D /Volumes/wehrrig4D')
+cd /Volumes/wehrrig4D
 close all
 
 groupdatafilename='preycapture_groupdata';
@@ -18,8 +22,8 @@ groupdatafilename='preycapture_groupdata';
 %adjust filenames to work on a mac
 if ismac
     groupdatadir= strrep(groupdatadir, '\', '/');
-    groupdatadir= strrep(groupdatadir, 'C:', '/Volumes/C');
-    groupdatadir= strrep(groupdatadir, 'D:', '/Volumes/D');
+    groupdatadir= strrep(groupdatadir, 'C:', '/Volumes/wehrrig4C');
+    groupdatadir= strrep(groupdatadir, 'D:', '/Volumes/wehrrig4D');
     
 end
 
@@ -195,7 +199,8 @@ shading interp
 xlabel('Azimuth, degrees')
 ylabel('Range, cm')
 % colorbar ;
-title(sprintf('Azimuth vs. Range, n=%d', numfiles))
+title(sprintf('Azimuth vs. Range, n=%d trials', numfiles))
+set(gca, 'fontsize', 18)
 
 
 % 2-D histogram of range vs speed
@@ -209,7 +214,8 @@ shading interp
 xlabel('mouse speed, cm/s')
 ylabel('range, cm')
 % colorbar ;
-title(sprintf('Mouse Speed vs. Range, n=%d', numfiles))
+title(sprintf('Mouse Speed vs. Range, n=%d trials', numfiles))
+set(gca, 'fontsize', 18)
 
 % 2-D histogram of range vs cricket speed
 %histogram speeds 0-40 px/s  in 30 bins, and ranges 0-1200 px in 60 bins
@@ -222,7 +228,8 @@ shading interp
 xlabel('cricket speed, cm/s')
 ylabel('range, cm')
 % colorbar ;
-title(sprintf('cricket Speed vs. Range, n=%d', numfiles))
+title(sprintf('cricket Speed vs. Range, n=%d trials', numfiles))
+set(gca, 'fontsize', 18)
 
 % 2-D histogram of mouse speed vs cricket speed
 %histogram speeds 0-40 px/s  in 30 bins, and ranges 0-1200 px in 60 bins
@@ -235,7 +242,8 @@ shading interp
 xlabel('mouse speed, cm/s')
 ylabel('cricket speed, cm/s')
 % colorbar ;
-title(sprintf('mouse speed vs cricket Speed , n=%d', numfiles))
+title(sprintf('mouse speed vs cricket Speed , n=%d trials', numfiles))
+set(gca, 'fontsize', 18)
 
 
 
@@ -245,52 +253,57 @@ title(sprintf('mouse speed vs cricket Speed , n=%d', numfiles))
 figure
 F=-size(RangeM,2)+1:1:0;
 t=F/framerate;
-shadedErrorBar(t, nanmean(RangeM), nanstd(RangeM), 'lineprops', 'b', 'transparent', 1);
-xlim([-20 0])
+shadedErrorBar(t, nanmean(RangeM), nanstd(RangeM)/sqrt(numfiles), 'lineprops', 'b', 'transparent', 1);
+xlim([-10 0])
 xlabel('time to capture, s')
 ylabel('range, cm')
+set(gca, 'fontsize', 18)
 
 % population average azimuth vs time, aligned to capture
 figure
-shadedErrorBar(t, nanmean(AzimuthM), nanstd(AzimuthM), 'lineprops', 'b', 'transparent', 1);
-xlim([-20 0])
+shadedErrorBar(t, nanmean(AzimuthM), nanstd(AzimuthM)/sqrt(numfiles), 'lineprops', 'b', 'transparent', 1);
+xlim([-10 0])
 xlabel('time to capture, s')
 ylabel('Azimuth, degrees')
+set(gca, 'fontsize', 18)
 
 % population average speed vs time, aligned to capture
 figure
 hold on
 plot(0, 0, 'b.', 0, 0, 'r.') %dummy for legend
-shadedErrorBar(t, nanmean(SpeedM), nanstd(SpeedM), 'lineprops', 'b', 'transparent', 1);
-shadedErrorBar(t, nanmean(CSpeedM), nanstd(CSpeedM), 'lineprops', 'r', 'transparent', 1);
-xlim([-20 0])
+shadedErrorBar(t, nanmean(SpeedM), nanstd(SpeedM)/sqrt(numfiles), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(t, nanmean(CSpeedM), nanstd(CSpeedM)/sqrt(numfiles), 'lineprops', 'r', 'transparent', 1);
+xlim([-5 0])
 xlabel('time to capture, s')
 ylabel('speed, cm/s')
 legend('mouse speed', 'cricket speed')
+set(gca, 'fontsize', 18)
 
 
 % population average range vs time, aligned to cricket drop
 figure
 F=1:size(RangeM2,2);
 t=F/framerate;
-shadedErrorBar(t, nanmean(RangeM2), nanstd(RangeM2), 'lineprops', 'b', 'transparent', 1);
-xlim([0 10])
+shadedErrorBar(t, nanmean(RangeM2), nanstd(RangeM2)/sqrt(numfiles), 'lineprops', 'b', 'transparent', 1);
+xlim([0 2])
 xlabel('time from cricket drop, s')
 ylabel('range, cm')
+set(gca, 'fontsize', 18)
 
 % % population average azimuth vs time, aligned to cricket drop
 figure
-shadedErrorBar(t, nanmean(AzimuthM2), nanstd(AzimuthM2), 'lineprops', 'b', 'transparent', 1);
-xlim([0 10])
+shadedErrorBar(t, nanmean(AzimuthM2), nanstd(AzimuthM2)/sqrt(numfiles), 'lineprops', 'b', 'transparent', 1);
+xlim([0 2])
 xlabel('time from cricket drop, s')
 ylabel('Azimuth, degrees')
+set(gca, 'fontsize', 18)
 
 % % population average speed vs time, aligned to cricket drop
 figure
 hold on
 plot(0, 0, 'b.', 0, 0, 'r.') %dummy for legend
-shadedErrorBar(t, nanmean(SpeedM2), nanstd(SpeedM2), 'lineprops', 'b', 'transparent', 1);
-shadedErrorBar(t, nanmean(CSpeedM2), nanstd(CSpeedM2), 'lineprops', 'r', 'transparent', 1);
+shadedErrorBar(t, nanmean(SpeedM2), nanstd(SpeedM2)/sqrt(numfiles), 'lineprops', 'b', 'transparent', 1);
+shadedErrorBar(t, nanmean(CSpeedM2), nanstd(CSpeedM2)/sqrt(numfiles), 'lineprops', 'r', 'transparent', 1);
 xlim([0 10])
 xlabel('time from cricket drop, s')
 ylabel('speed, cm/s')
@@ -302,8 +315,9 @@ hist(Numframes/framerate, 50)
 title(sprintf('Time to capture, median=%.1f s +- %.1f s', median(Numframes)/framerate, std(Numframes/framerate)/sqrt(numfiles)))
 xlabel('time to capture, s')
 ylabel('count')
+set(gca, 'fontsize', 18)
 
-
+return
 %%%%%%%%%%%%%%%%%%
 % look for motifs
 
