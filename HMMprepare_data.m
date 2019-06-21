@@ -6,7 +6,7 @@
 %which is called by preycapturebatch using a file list such as preycapturefilelist
 
 clear
-close all
+close all hidden
 
 %groupdatadir= 'C:\Users\lab\Desktop\Legless crickets\combinedlegless';
 %groupdatadir= 'D:\lab\Data\Legless crickets\combinedlegless';
@@ -19,7 +19,7 @@ groupdatafilename='preycapture_groupdata_lidocaine';
 %adjust filenames to work on a mac & mount disk
 if ismac
     mkdir /Volumes/wehrrig4D
-    system('mount_smbfs smb://wehrrig4/D /Volumes/wehrrig4D')
+    system('mount_smbfs smb://lab:mausA1@wehrrig4/D /Volumes/wehrrig4D')
     cd /Volumes/wehrrig4D
     groupdatadir= strrep(groupdatadir, '\', '/');
     groupdatadir= strrep(groupdatadir, 'C:', '/Volumes/wehrrig4C');
@@ -32,27 +32,59 @@ load(groupdatafilename)
 groupdata=groupdata_all;
 numfiles=length(groupdata);
 fprintf('\nanalyzing %d files', numfiles)
+files=lidocaine_new_preycapturefilelist;
+
 %groupdata is already trimmed to start_frame:stop_frame
 
+%new folder 24 video does not match data
+
 %plot
-for i=1:20
+for i= 10%[17 20 28 10 19 28 1 8 9 13 16 17 4]  % 17 20 28 10 19 28 1 8 9 13 16 17 4
+    t=1:groupdata(i).numframes;
+    f=t; %frames
+    f2=f(1:end-1);
+    t=t+groupdata(i).start_frame;
+    t=t/30;
+    t2=t(1:end-1);
+    
     figure
     hold on
-    t=1:groupdata(i).numframes;
-    t2=t(1:end-1);
     plot(t2, groupdata(i).speed)
     plot(t2, groupdata(i).cspeed)
     plot(t, groupdata(i).range)
-    plot(t, groupdata(i).azimuth)
+    plot(t, groupdata(i).azimuth*6)
+    set(gcf, 'pos', [22        2038        1413         420])
+    set(gca, 'xtick', 0:1:t(end))
+    title('seconds, aligned to video, do not click')
+    
+    figure
+    hold on
+    plot(f2, groupdata(i).speed)
+    plot(f2, groupdata(i).cspeed)
+    plot(f, groupdata(i).range)
+    plot(f, groupdata(i).azimuth*6)
+    legend('mouse speed', 'cricket speed', 'range', 'azimuth*6')
     
     contact=find(groupdata(i).range<2); %2 px = 1 mm
     plot(contact, 0*contact, 'ro')
     ylim([0 1200])
+    moviepath= strrep(files(i).datapath, 'D:', '/Volumes/wehrrig4D');
+    moviepath= strrep(moviepath, '\', '/');
+    title(moviepath, 'interpreter', 'none')
+    set(gcf, 'pos', [22        1111        1413         883])
+    set(gca, 'xtick', 0:30:f(end))
 end
 
-return
+
 %if you want to watch the video, look for the appropriate file list in
 %readme
+%i.e. files=lidocaine_new_preycapturefilelist
+cd(moviepath)
+fprintf('\n%s', moviepath)
+fprintf('\nstart frame %d = %.1f s', files(i).start_frame, files(i).start_frame/30 )
+ 
+ %keyboard
+  return
 
 TargetAcquisition=[];
 TargetLoss=[];
@@ -66,7 +98,7 @@ str={ 'Target Acquisition', ...
     'Kill', ...
     'Undo last click'};
 cont=1;
-    h=msgbox('click to mark a frame');
+h=msgbox('click to mark a frame', 'modal');
 while cont
     [x,y]=ginput(1);
     x=round(x);
@@ -78,8 +110,10 @@ while cont
         switch str{frametype},
             case 'Target Acquisition',
                 TargetAcquisition=[TargetAcquisition x];
+                text(x, 1190, 'TA')
             case 'Target Loss',
                 TargetLoss=[TargetLoss x];
+                text(x, 1190, 'TL')
             case 'Contact',
                 Contact=[Contact x];
             case 'Escape',
@@ -90,13 +124,13 @@ while cont
                 set(L, 'visible', 'off')
         end
     else cont=0;
-                set(L, 'visible', 'off')
+        set(L, 'visible', 'off')
     end
     
 end % while
 
-if Kill>t(end)
-    Kill=t(end);
+if Kill>f(end)
+    Kill=f(end);
 end
 Search=0*t;
 Pursuit=0*t;
@@ -110,33 +144,102 @@ Contact
 Escape
 Kill
 
-keyboard
+if isempty(contact)
+    contact=f(end);
+end
+if isempty(Contact)
+    Contact=f(end);
+end
+
+
 
 % Hard-coded epochs from events
-Pursuit(TargetAcquisition(1):TargetLoss(1))=1;
-    Search(1:TargetAcquisition(1))=1;
 
-    Pursuit(TargetAcquisition(2):TargetLoss(2))=1;
-    Search(TargetLoss(1):TargetAcquisition(2))=1;
+switch i
+    case {10, 19, 8} % for trial 10 19
+        
+        Pursuit(TargetAcquisition(1):TargetLoss(1))=1;
+        Search(1:TargetAcquisition(1))=1;
+        Pursuit(TargetAcquisition(2):TargetLoss(2))=1;
+        Search(TargetLoss(1):TargetAcquisition(2))=1;
+        Pursuit(TargetAcquisition(3):Contact(1))=1;
+        Search(TargetLoss(2):TargetAcquisition(3))=1;
+        Capture(contact)=1;
+        
+    case 28
+        %for trial 28
+        Pursuit(TargetAcquisition(1):TargetLoss(1))=1;
+        Search(1:TargetAcquisition(1))=1;
+        Pursuit(TargetAcquisition(2):TargetLoss(2))=1;
+        Search(TargetLoss(1):TargetAcquisition(2))=1;
+        Search(TargetLoss(2):TargetAcquisition(3))=1;
+        Capture(contact)=1;
+        Capture(Kill:f(end))=1;
+        Pursuit(TargetAcquisition(3):TargetLoss(3))=1;
+        Search(TargetLoss(3):TargetAcquisition(4))=1;
+        Pursuit(TargetAcquisition(4):contact(1))=1;
+    case 1
+        Search(1:TargetAcquisition(1))=1;
+        Pursuit(TargetAcquisition(1):TargetLoss(1))=1;
+        Search(TargetLoss(1):TargetAcquisition(2))=1;
+        Pursuit(TargetAcquisition(2):contact(1))=1;
+        Capture(contact)=1;
 
-    Pursuit(TargetAcquisition(3):Contact(1))=1;
+    case 9
+        %4 TAs, 3 TLs, no contact audodetected at end
+        Search(1:TargetAcquisition(1))=1;
+        Pursuit(TargetAcquisition(1):TargetLoss(1))=1;
+        Pursuit(TargetAcquisition(2):TargetLoss(2))=1;
+        Pursuit(TargetAcquisition(3):TargetLoss(3))=1;
+        Capture(contact)=1;
+        Pursuit(TargetAcquisition(3):Capture(1))=1;
+        
+        Search(TargetLoss(1):TargetAcquisition(2))=1;
+        Search(TargetLoss(2):TargetAcquisition(3))=1;
+        Search(TargetLoss(3):TargetAcquisition(4))=1;
+    otherwise %try a generic
+        Search(1:TargetAcquisition(1))=1;
+        for k=1:length(TargetAcquisition)-1
+            Pursuit(TargetAcquisition(k):TargetLoss(k))=1;
+            Search(TargetLoss(k):TargetAcquisition(k+1))=1;
+        end
+        Pursuit(TargetAcquisition(end):contact(1))=1;
+                Capture(contact)=1;
+end
 
-    Capture(contact)=1;
 
-    
 ylim([-220 1200])
-plot(t, -200+Search*40)
-plot(t, -150+Pursuit*40)
-plot(t, -100+Capture*40)
+plot(f, -200+Search*40)
+plot(f, -150+Pursuit*40)
+plot(f, -100+Capture*40)
 text(0, -200+20, 'Search')
 text(0, -150+20, 'Pursuit')
 text(0, -100+20, 'Capture')
 
+keyboard
 
+cd(groupdatadir)
 load('labelled_examples.mat')
 n=length(labelled_examples);
+fprintf('\nfound %d trials in groupdata', n)
 
-labelled_examples(n+1)=groupdata(i);
+labelled_examples(n+1).mousespeed=groupdata(i).speed;
+labelled_examples(n+1).cricketspeed=groupdata(i).cspeed;
+labelled_examples(n+1).range=groupdata(i).range;
+labelled_examples(n+1).azimuth=groupdata(i).azimuth;
+labelled_examples(n+1).framerate=groupdata(i).framerate;
+labelled_examples(n+1).start_frame=groupdata(i).start_frame;
+labelled_examples(n+1).stop_frame=groupdata(i).stop_frame;
+labelled_examples(n+1).firstContact=groupdata(i).firstContact;
+labelled_examples(n+1).numframes=groupdata(i).numframes;
+labelled_examples(n+1).smoothedmouseCOMx=groupdata(i).smouseCOMx;
+labelled_examples(n+1).smoothedmouseCOMy=groupdata(i).smouseCOMy;
+labelled_examples(n+1).smoothedcricketx=groupdata(i).scricketx;
+labelled_examples(n+1).smoothedcrickety=groupdata(i).scrickety;
+labelled_examples(n+1).smoothedmouseNosex=groupdata(i).smouseNosex;
+labelled_examples(n+1).smoothedmouseNosey=groupdata(i).smouseNosey;
+
+
 labelled_examples(n+1).Search=Search;
 labelled_examples(n+1).Pursuit=Pursuit;
 labelled_examples(n+1).Capture=Capture;
@@ -147,17 +250,54 @@ labelled_examples(n+1).Escape=Escape;
 labelled_examples(n+1).Kill=Kill;
 labelled_examples(n+1).groupdata_index=i;
 labelled_examples(n+1).groupdata_filename=groupdatafilename;
+labelled_examples(n+1).movie_location=files(i).datapath;
+labelled_examples(n+1).start_frame=files(i).start_frame;
+labelled_examples(n+1).stop_frame=files(i).stop_frame;
+labelled_examples(n+1).drug=files(i).drug;
+
 
 save labelled_examples labelled_examples
 
+fprintf('\nwrote trial %d to labelled_examples.mat', n+1)
 
+%%%%%%%%%%
+return
+ %to plot already labelled data
+cd(groupdatadir)
+load('labelled_examples.mat')
+n=1;
+
+Search=labelled_examples(n).Search;
+Pursuit=labelled_examples(n).Pursuit;
+Capture=labelled_examples(n).Capture;
+TargetAcquisition=labelled_examples(n).TargetAcquisition;
+TargetLoss=labelled_examples(n).TargetLoss;
+ylim([-220 1200])
+f=1:length(Search);
+plot(f, -200+Search*40)
+plot(f, -150+Pursuit*40)
+plot(f, -100+Capture*40)
+text(0, -200+20, 'Search')
+text(0, -150+20, 'Pursuit')
+text(0, -100+20, 'Capture')
 
     
+    
+for k=1:length(TargetAcquisition)
+    x=TargetAcquisition(k);
+    L=line(x*[1 1], ylim, 'linestyle', '--');
+    text(x, 1190, 'T.Acq')
+end
+for k=1:length(TargetLoss)
+    x=TargetLoss(k);
+    L=line(x*[1 1], ylim, 'linestyle', '--');
+    text(x, 1190, 'T.Loss')
+end
 
+xlabel('time, frames')
+ylabel('pixels or pixels/frame or angle')
 
-
-
-
+legend('mouse speed', 'cricket speed', 'range', 'azimuth*6')
 
 
 
