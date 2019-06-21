@@ -1,5 +1,8 @@
-function out = LoadDeepCutTracks2(varargin)
+function out = LoadDeepCutTracksFreeField(varargin)
 
+%modified from LoadDeepCutTracks2 to run on free field data with no cricket
+%expects 2 ear cams and a sky cam, no cricket
+%
 %expected data: 2 ear cameras, sky camera, with mouse and cricket
 %must run ProcessCams first, which generates a behavior.mat file, and
 %involves identifying start and stop frame
@@ -33,8 +36,6 @@ threshold = 0.9;
         [right_ear] = clean(SkyTrack.Rcam,threshold);
     end
     [tail_base] = clean(SkyTrack.Ptail,threshold);
-    [crick_head] = clean(SkyTrack.Chead,threshold);
-    [crick_tail] = clean(SkyTrack.Cbutt,threshold);
     
 
     [snout] = interpolating(snout, 1);
@@ -46,24 +47,12 @@ threshold = 0.9;
     [tail_base] = interpolating(tail_base, 1);
     [tail_base] = interpolating(tail_base, 2);
     
-    [crick_head] = interpolating(crick_head, 1);
-    [crick_head] = interpolating(crick_head, 2);
-    [crick_tail] = interpolating(crick_tail, 1);
-    [crick_tail] = interpolating(crick_tail, 2);
     
     mouseNosexy=snout;
     mouseCOMxy=tail_base;
-    cricketxy=crick_head;
-    for i = 1:length(cricketxy)
-        if isnan(cricketxy(i,1))                    %If cricket value is NaN,
-            cricketxy(i,1) = mouseNosexy(i,1);            %replace it with mouse coordinate,
-            cricketxy(i,2) = mouseNosexy(i,2);            %because it's probably right under their nose
-        end
-    end
     
     out.mouseCOMxy=mouseCOMxy;
     out.mouseNosexy=mouseNosexy;
-    out.cricketxy=cricketxy;
     
 %%%%%%% Eartracking/Cleaning %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if NoEars == 0
