@@ -79,7 +79,7 @@ RearStart = find(Lear.skysync==start_frame,1);
 if isempty(RearStart)
     RearStart = Rear.skysync(1);
 end
-RearStop = find(Lear.skysync==stop_frame,1);
+RearStop = find(Rear.skysync==stop_frame,1);
 if isempty(RearStop)
     RearStop = find(Rear.skysync==stop_frame-1,1);
 end
@@ -138,6 +138,13 @@ axis([300 1600 0 1200])
 title('mouse positions, smoothed')
 set(gca, 'ydir', 'reverse')
 
+figure
+hold on
+plot(smouseCOMx)
+plot(smouseCOMy)
+plot( smouseNosex)
+plot(smouseNosey)
+legend('COMx', 'COMy', 'noseX', 'noseY')
 % animate the mouse and cricket
 % if(1)
 %     h=plot(smouseCOMx(1), smouseCOMy(1), 'bo', smouseNosex(1), smouseNosey(1), 'ro');
@@ -178,6 +185,8 @@ subplot(312)
 hold on
 plot(mouse_bearing_unwrapped, 'k')
 title('unwrapped absolute mouse bearing')
+ print -dpsc2 'analysis_plots.ps' -append
+
 % legend('mouse COM to cricket', 'mouse nose to cricket', 'mouse bearing')
 
 % animate the mouse and cricket
@@ -307,7 +316,8 @@ subplot(2,1,1);
 title(' speed over time ')
 % plot(tspeed, 10*speed, tspeed, 10*cspeed, t, range, t, RelativeAzimuth) %careful, these are in different units
 hold on;
-plot(tspeed, 10*speed, 'LineWidth',2)
+region=[1:1000];
+plot(tspeed(region), 10*speed(region), 'LineWidth',2)
 % plot(t,mouse_bearing_unwrapped,'c-','LineWidth',4);
 
 legend('mouse speed')
@@ -317,9 +327,8 @@ grid on
 % line(xlim, [0 0], 'color', 'k')
 th=title(datapath, 'interpreter', 'none');
 set(th,'fontsize', 8)
-try
-    print -dpsc2 'analysis_plots.ps' -append
-end
+
+
 
 % Ear plots, added by Nick:
 subplot(2,1,2);
@@ -334,16 +343,16 @@ hold on;
 % plot(LeftCamtime,LcDorMed(:,2),'g-')
 % plot(LeftCamtime,LcDorLat(:,2),'g-')
 % plot(LeftCamtime,LcDist(:,2),'g-')
-plot(LeftCamtime,LiVenMed1(:,1),'g--')
-plot(LeftCamtime,LiVenMed2(:,1),'g--')
-plot(LeftCamtime,LiVenLat1(:,1),'g--')
-plot(LeftCamtime,LiVenLat2(:,1),'g--')
-plot(LeftCamtime,LiDorMed1(:,1),'g--')
-plot(LeftCamtime,LiDorMed2(:,1),'g--')
-plot(LeftCamtime,LiDorLat1(:,1),'g--')
-plot(LeftCamtime,LiDorLat2(:,1),'g--')
-plot(LeftCamtime,LiDist(:,1),'g--')
-plot(LeftCamtime,LiThetaAverage,'g-','LineWidth',4)
+plot(LeftCamtime(region),LiVenMed1(region,1),'g--')
+plot(LeftCamtime(region),LiVenMed2(region,1),'g--')
+plot(LeftCamtime(region),LiVenLat1(region,1),'g--')
+plot(LeftCamtime(region),LiVenLat2(region,1),'g--')
+plot(LeftCamtime(region),LiDorMed1(region,1),'g--')
+plot(LeftCamtime(region),LiDorMed2(region,1),'g--')
+plot(LeftCamtime(region),LiDorLat1(region,1),'g--')
+plot(LeftCamtime(region),LiDorLat2(region,1),'g--')
+plot(LeftCamtime(region),LiDist(region,1),'g--')
+plot(LeftCamtime(region),LiThetaAverage(region),'g-','LineWidth',4)
 % plot(LeftCamtime,LiVenMed(:,2),'g-')
 % plot(LeftCamtime,LiVenLat(:,2),'g-')
 % plot(LeftCamtime,LiDorMed(:,2),'g-')
@@ -365,19 +374,19 @@ plot(LeftCamtime,LiThetaAverage,'g-','LineWidth',4)
 % plot(RightCamtime,RcDorMed(:,2),'r-')
 % plot(RightCamtime,RcDorLat(:,2),'r-')
 % plot(RightCamtime,RcDist(:,2),'r-')
-plot(RightCamtime,RiDorMed1(:,1),'r--')
-plot(RightCamtime,RiDorMed2(:,1),'r--')
-plot(RightCamtime,RiDorLat1(:,1),'r--')
-plot(RightCamtime,RiDorLat2(:,1),'r--')
-plot(RightCamtime,RiDist(:,1),'r--')
-plot(RightCamtime,RiVenLat1(:,1),'r--')
-plot(RightCamtime,RiVenLat2(:,1),'r--')
-plot(RightCamtime,RiVenMed1(:,1),'r--')
-plot(RightCamtime,RiVenMed2(:,1),'r--')
-plot(RightCamtime,RiThetaAverage,'r-','LineWidth',4)
+plot(RightCamtime(region),RiDorMed1(region,1),'r--')
+plot(RightCamtime(region),RiDorMed2(region,1),'r--')
+plot(RightCamtime(region),RiDorLat1(region,1),'r--')
+plot(RightCamtime(region),RiDorLat2(region,1),'r--')
+plot(RightCamtime(region),RiDist(region,1),'r--')
+plot(RightCamtime(region),RiVenLat1(region,1),'r--')
+plot(RightCamtime(region),RiVenLat2(region,1),'r--')
+plot(RightCamtime(region),RiVenMed1(region,1),'r--')
+plot(RightCamtime(region),RiVenMed2(region,1),'r--')
+plot(RightCamtime(region),RiThetaAverage(region),'r-','LineWidth',4)
 midline = ones(length(RightCamtime));
 midline = midline*(pi/2);
-plot(RightCamtime,midline,'k-','LineWidth',4);
+plot(RightCamtime(region),midline(region),'k-','LineWidth',4);
 
 ylim([0,pi]);
 yticks([0 pi/2 pi])
@@ -393,7 +402,7 @@ for i = 2:(length(t)-1)
     deltaAzimuth = [deltaAzimuth;newdelta];
 end
 deltaAzimuth = [deltaAzimuth;nan];
-plot(t,pi/2+deg2rad(deltaAzimuth),'-','LineWidth',3);
+plot(t(round(region/2)),pi/2+deg2rad(deltaAzimuth(round(region/2))),'-','LineWidth',3);
 ylabel('Slope of Absolute Azimuth');
 % set(gca,'YDir','reverse');
 % ylabel('anterior -> posterior')
@@ -410,6 +419,8 @@ ylabel('Slope of Absolute Azimuth');
 % title('RightEarTracks')
 title('EarTracks')
 hold off;
+    print -dpsc2 'analysis_plots.ps' -append
+
 %end of example addition
 
 %plot cross-correlations of ear motion and mouse steering
@@ -417,6 +428,11 @@ hold off;
 deltaAzimuthI=resample(deltaAzimuth, length(RightCamtime),length(t));
 deltaAzimuthI(find(isnan(deltaAzimuthI)))=0; %remove nans because xcorr can't handle nans
 deltaAzimuthIr=deg2rad(deltaAzimuthI); %convert to radians
+
+LiThetaAverage(isnan(LiThetaAverage))=0;
+RiThetaAverage(isnan(RiThetaAverage))=0;
+deltaAzimuthIr(isnan(deltaAzimuthIr))=0;
+
 [cRAz, lags]=xcov(RiThetaAverage, deltaAzimuthIr, 128);
 [cLAz, lags]=xcov(LiThetaAverage, deltaAzimuthIr, 128);
 [c, lags]=xcov(LiThetaAverage, RiThetaAverage, 128);
@@ -425,6 +441,11 @@ plot(lags, cRAz,'r', lags, cLAz,'g', lags, c, 'k')
 legend('Right ear -> deltaAzimuth', 'Left ear -> deltaAzimuth', 'Left ear -> Right ear');
 xlabel('cross-covariance in frames')
 grid on
+title(pwd)
+
+print -dpdf xcorr
+ print -dpsc2 'analysis_plots.ps' -append
+
 
 %plot cross-correlations of cricket speed and ear motion 
 %  cspeedI=resample(cspeed, length(RightCamtime),length(t));
